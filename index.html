@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubPipe — Your Message, Your Privacy</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
+</head>
+<body>
+
+    <!-- ================= 1. LANDING / DOWNLOADS / REPORT SCREEN ================= -->
+    <div id="landing-screen" class="screen active">
+        <header class="top-nav">
+            <div class="brand-logo" onclick="showLandingTab('home')">
+                <img src="Assets/Images/logo-wordmark-light.png" alt="HubPipe" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <span style="display:none; font-weight:800; color:var(--primary); font-size:22px;">HubPipe</span>
+            </div>
+            <nav class="nav-links">
+                <button class="nav-btn" onclick="showLandingTab('report')">Report</button>
+                <button class="nav-btn" onclick="showLandingTab('downloads')">Downloads</button>
+                <button class="nav-btn" onclick="openAuthScreen('login')">Open in Browser</button>
+                <button class="primary-btn" onclick="showLandingTab('downloads')">Download Now</button>
+            </nav>
+        </header>
+
+        <!-- Home Tab -->
+        <main id="tab-home" class="landing-content active">
+            <div class="hero-container">
+                <div class="hero-illustration">
+                    <img src="Assets/Images/device.png" alt="HubPipe Devices" onerror="this.style.display='none';">
+                </div>
+                <div class="hero-card">
+                    <h1>HubPipe, Your Message, Your Privacy</h1>
+                    <p>HubPipe is an messaing app for mobiles and desktop</p>
+                    <div class="divider-line"></div>
+                    <div class="hero-actions">
+                        <button class="primary-btn" onclick="showLandingTab('downloads')">Downloads</button>
+                        <button class="secondary-btn" onclick="openAuthScreen('login')">Open in Browser</button>
+                    </div>
+                    <div class="divider-line"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Downloads Tab -->
+        <main id="tab-downloads" class="landing-content">
+            <div class="hero-container">
+                <div class="hero-illustration">
+                    <img src="Assets/Images/device.png" alt="HubPipe Devices" onerror="this.style.display='none';">
+                </div>
+                <div class="hero-card">
+                    <h1 id="os-detect-title">Download HubPipe for your “OS NAME”</h1>
+                    <p>Don’t see your Opreating System Download? scroll down to find yours</p>
+                    <div class="divider-line"></div>
+                    <div class="hero-actions">
+                        <button class="primary-btn" id="os-download-btn" onclick="alert('HubPipe installer queued for your device!')">Downloads for [OS NAME]</button>
+                    </div>
+                    <div class="divider-line"></div>
+                    <div style="margin-top: 10px;">
+                        <span class="text-link" style="font-size: 16px; font-weight: 600; color: #ffffff;" onclick="scrollToOsGrid()">Check Here to find your OS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expanded OS Selector Section -->
+            <div id="os-grid-section" style="max-width: 800px; width: 100%; margin: 40px auto; padding: 20px;">
+                <h3 style="color: var(--primary); margin-bottom: 16px; text-align: center;">All Available Operating Systems</h3>
+                <div class="os-grid">
+                    <div class="os-box">
+                        <h3>Windows</h3>
+                        <p>Windows 10 / 11 (64-bit)</p>
+                        <button class="primary-btn" onclick="alert('Windows installer downloaded!')">Download Now</button>
+                    </div>
+                    <div class="os-box">
+                        <h3>macOS</h3>
+                        <p>Intel & Apple Silicon</p>
+                        <button class="primary-btn" onclick="alert('macOS DMG downloaded!')">Download Now</button>
+                    </div>
+                    <div class="os-box">
+                        <h3>Android</h3>
+                        <p>Android 10+ APK</p>
+                        <button class="primary-btn" onclick="alert('Android APK downloaded!')">Download Now</button>
+                    </div>
+                    <div class="os-box">
+                        <h3>Linux</h3>
+                        <p>AppImage / .deb</p>
+                        <button class="primary-btn" onclick="alert('Linux package downloaded!')">Download Now</button>
+                    </div>
+                </div>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="secondary-btn" onclick="showLandingTab('home')">← Back to Home</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Report Tab -->
+        <main id="tab-report" class="landing-content">
+            <div class="hero-container">
+                <div class="hero-illustration">
+                    <img src="Assets/Images/device.png" alt="HubPipe Devices" onerror="this.style.display='none';">
+                </div>
+                <div class="hero-card">
+                    <h1>Report an Issue or Bug report</h1>
+                    <p style="max-width: 480px; margin: 0 auto 28px auto; line-height: 1.5;">
+                        If you find an bug or getting an cyberbullied HubPipe<br>you can report here!
+                    </p>
+                    <div class="hero-actions">
+                        <button class="primary-btn" style="padding: 12px 48px;" onclick="toggleReportForm()">Report!</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collapsible Report Form Section -->
+            <div id="report-form-section" style="display: none; max-width: 560px; width: 100%; margin: 28px auto; background-color: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; text-align: left;">
+                <h3 style="color: var(--primary); margin-bottom: 14px;">Submit Your Report</h3>
+                <form class="simple-form" onsubmit="handleReportSubmit(event)">
+                    <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Issue Type</label>
+                    <select id="report-type" required>
+                        <option value="bug">Bug / Technical Issue</option>
+                        <option value="safety">Cyberbullying / Safety Report</option>
+                        <option value="other">Other Feedback</option>
+                    </select>
+                    <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Username or Link (optional)</label>
+                    <input type="text" id="report-target" placeholder="e.g. @Username1234">
+                    <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Description</label>
+                    <textarea id="report-details" rows="4" placeholder="Describe what happened..." required></textarea>
+                    <button type="submit" class="primary-btn full-width" style="border-radius: 99px;">Send Report</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= 2. AUTHENTICATION SCREEN ================= -->
+    <div id="auth-screen" class="screen">
+        <div class="auth-wrapper-centered">
+            <!-- Top Centered Brand Logo -->
+            <div class="auth-brand-header" onclick="backToLanding()" title="Back to Home">
+                <img src="Assets/Images/logo-wordmark-light.png" alt="HubPipe" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <span style="display:none; font-weight:800; color:var(--primary); font-size:26px;">HubPipe</span>
+            </div>
+
+            <!-- Pure Black Rounded Card -->
+            <div class="auth-card-screenshot">
+                <h2 id="auth-title">Login</h2>
+
+                <!-- Login / Sign Up Form -->
+                <form id="auth-form" onsubmit="handleAuth(event)">
+                    <div class="input-group">
+                        <label id="email-label">Email or Username</label>
+                        <input type="text" id="email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+
+                    <div class="input-group" id="verify-group" style="display: none;">
+                        <label>Password Verify</label>
+                        <input type="password" id="password-verify">
+                    </div>
+
+                    <div id="login-helpers" class="helper-row-center">
+                        <span class="text-link" onclick="switchAuthMode('forgot')">Forgot password</span>
+                    </div>
+
+                    <div class="google-btn-wrap">
+                        <button type="button" class="google-btn-screenshot" onclick="handleGoogleSignIn()">
+                            <svg width="18" height="18" viewBox="0 0 18 18">
+                                <path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.19-1.84H9v3.48h4.84c-.21 1.12-.84 2.08-1.79 2.72v2.26h2.9c1.7-1.57 2.69-3.88 2.69-6.62z"/>
+                                <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.81.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.73H.92v2.33C2.42 15.86 5.48 18 9 18z"/>
+                                <path fill="#FBBC05" d="M3.95 10.79c-.18-.54-.28-1.12-.28-1.79s.1-1.25.28-1.79V4.88H.92C.33 6.05 0 7.48 0 9s.33 2.95.92 4.12l3.03-2.33z"/>
+                                <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.42 2.14.92 4.88l3.03 2.33c.71-2.14 2.7-3.63 5.05-3.63z"/>
+                            </svg>
+                            <span>Login with Google</span>
+                        </button>
+                    </div>
+
+                    <button type="submit" id="main-auth-submit-btn" class="dialog-change-btn" style="display: none; margin-top: 20px;">Create & Verify</button>
+                </form>
+
+                <!-- Forgot Password Dialog Form -->
+                <form id="forgot-form" style="display: none;" onsubmit="handleForgotPassword(event)">
+                    <p class="dialog-subtitle">Enter your Email to change your password</p>
+                    <div class="input-group" style="margin-top: 14px;">
+                        <input type="email" id="forgot-email" placeholder="(e.g UserCar123@outlook.com)" required>
+                    </div>
+                    <button type="submit" class="dialog-change-btn">Change</button>
+                    <div class="helper-row-center" style="margin-top: 16px;">
+                        <span class="text-link" onclick="switchAuthMode('login')">Back to Login</span>
+                    </div>
+                </form>
+
+                <!-- Inbox Notice Dialog -->
+                <div id="inbox-notice" style="display: none; text-align: center;">
+                    <p id="inbox-message" class="dialog-subtitle" style="line-height: 1.5; margin-bottom: 24px; color: #cccccc;">
+                        To complete setting up your<br>Account. check your mailbox<br>for an email from HubPipe<br>to verify your account.<br><br>
+                        <span style="font-size: 13px; color: #888888;">if you don't see an mail check your<br>spam folder</span>
+                    </p>
+                    <button type="button" id="inbox-action-btn" class="dialog-change-btn" onclick="switchAuthMode('setup')">Ok, Open Mail</button>
+                </div>
+
+                <!-- Final Setup Form -->
+                <form id="final-setup-form" style="display: none;" onsubmit="completeFinalSetup(event)">
+                    <p class="dialog-subtitle" style="margin-bottom: 16px;">Enter your username (requried)</p>
+                    <div class="input-group">
+                        <input type="text" id="setup-username" placeholder="(e.g AppleBoy823)" required>
+                    </div>
+                    <button type="submit" class="dialog-change-btn" style="margin-top: 16px;">Finish 🎉</button>
+                </form>
+            </div>
+
+            <!-- Two Bottom Pill Buttons Outside the Card -->
+            <div class="auth-bottom-buttons" id="auth-bottom-buttons">
+                <button type="button" id="btn-bottom-login" class="pill-btn-light-orange" onclick="handleBottomAuthClick('login')">Login</button>
+                <button type="button" id="btn-bottom-signup" class="pill-btn-orange" onclick="handleBottomAuthClick('signup')">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 3. LOADING SCREEN ================= -->
+    <div id="loading-screen" class="screen">
+        <div class="loading-container">
+            <img src="Assets/Images/logo-orange.png" alt="HubPipe" class="loading-logo" onerror="this.style.display='none';">
+            <h1 class="loading-title">HubPipe Setting your chats...</h1>
+            <p class="loading-tip">
+                Tip: HubPipe should be eaiser to use if not you<br>can check out our help page
+            </p>
+        </div>
+    </div>
+
+    <!-- ================= 4. MAIN HUB & CHAT APPLICATION SCREEN ================= -->
+    <div id="chat-screen" class="screen">
+        <!-- Left Navigation Sidebar -->
+        <aside id="left-sidebar" class="left-sidebar">
+            <div class="sidebar-top-header">
+                <div class="brand-cluster">
+                    <div class="orange-circle-icon" onclick="openHubView()" style="cursor: pointer;" title="Hub Home">
+                        <img src="Assets/Images/logo-white.png" alt="HubPipe" onerror="this.style.display='none';">
+                    </div>
+                    <div>
+                        <div class="sidebar-title-text">HubPipe</div>
+                        <div id="online-status-text" class="online-green-text">Online: [NO FRIENDS]</div>
+                    </div>
+                </div>
+                <button class="home-circle-btn" onclick="openHubView()" title="Hub Home">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 3L4 9v12h5v-7h6v7h5V9l-8-6z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Top Friends Section (Hidden when 0 friends) -->
+            <div id="top-friends-section" style="display: none;">
+                <div class="top-friends-heading">Top Friends</div>
+                <div id="top-friends-row" class="top-friends-row"></div>
+                <div class="sidebar-divider"></div>
+            </div>
+
+            <!-- Group Chats List / Empty State -->
+            <div class="sidebar-groups-area">
+                <div id="sidebar-groups-empty" class="empty-state-center">
+                    No Group Chat?, Create One!
+                </div>
+                <div id="rooms-list" class="groups-card-list"></div>
+            </div>
+
+            <!-- Minimized Rail Quick Add Button (Visible only when collapsed) -->
+            <button class="minimized-add-btn" onclick="openCreateModal('group')" title="Join or Create +">+</button>
+
+            <!-- Collapse Sidebar Tab -->
+            <button class="sidebar-collapse-tab" onclick="toggleLeftSidebar()" title="Toggle Sidebar">&lt;</button>
+
+            <!-- Bottom "Get Started by" & User Profile Card -->
+            <div class="sidebar-bottom-dock">
+                <div class="sidebar-divider" style="margin-bottom: 10px;"></div>
+                <div class="get-started-label">Get Started by</div>
+                <div class="get-started-row">
+                    <button class="green-action-btn" onclick="openCreateModal('group')">Join or Create +</button>
+                    <button class="green-action-btn" onclick="toggleDiscoverView()">Discover</button>
+                </div>
+
+                <div class="user-profile-pill-card" onclick="openProfileModal()">
+                    <img id="footer-pfp" src="https://api.dicebear.com/7.x/bottts/svg?seed=hubpipe" alt="Avatar">
+                    <div class="user-meta">
+                        <div id="footer-username">@Username1234</div>
+                        <div id="footer-tag">#4321</div>
+                    </div>
+                    <span class="gear-icon">⚙️</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Hub / Chat / Discover Pane -->
+        <main class="center-pane">
+            <!-- Top Search & Icons Bar -->
+            <header class="hub-top-bar" id="main-hub-top-bar">
+                <div class="hub-search-wrapper">
+                    <span id="hub-pin-icon" class="top-bar-icon" style="display: none;">📌</span>
+                    <input type="text" id="hub-search-input" placeholder="Search something like “chat!”" oninput="handleHubSearch()">
+                </div>
+                <span id="hub-people-icon" class="top-bar-icon" style="display: none; cursor: pointer;" onclick="toggleRightSidebar()" title="Toggle Right Sidebar">👥</span>
+            </header>
+
+            <!-- HUB HOME VIEW (Default Beginner View) -->
+            <div id="hub-home-view" class="pane-view active">
+                <div class="hub-content-scroll">
+                    <h1 class="hub-main-heading">Hub</h1>
+                    <div class="hub-line"></div>
+
+                    <button class="add-friend-wide-pill" onclick="openCreateModal('dm')">
+                        Add Friend +
+                    </button>
+
+                    <div class="hub-line"></div>
+
+                    <h2 class="hub-sub-heading">Friends</h2>
+
+                    <div id="hub-friends-empty" class="empty-state-center" style="min-height: 220px;">
+                        No Friends, try to add a friend!
+                    </div>
+                    <div id="hub-friends-list" class="hub-friends-stack"></div>
+                </div>
+            </div>
+
+            <!-- ACTIVE GROUP / DM CHAT VIEW -->
+            <div id="active-chat-container" class="pane-view">
+                <div class="chat-banner-area">
+                    <img id="current-room-banner" src="Assets/Images/logo-orange.png" alt="Group Banner" class="chat-banner-thumb">
+                    <h1 class="chat-banner-title" id="current-room-title">Group Chat Name</h1>
+                    <p class="chat-banner-desc" id="current-room-desc">Hello this is a group chat Description!</p>
+                    <div class="chat-banner-date" id="current-room-date">Nov 19 2026</div>
+                </div>
+
+                <div id="messages-log" class="messages-log"></div>
+
+                <div id="media-picker" class="media-picker" style="display: none;">
+                    <div id="picker-content" class="picker-grid"></div>
+                </div>
+
+                <form class="chat-input-area" onsubmit="sendMessage(event)">
+                    <input type="text" id="message-input" placeholder="Type anything here..." autocomplete="off">
+                    <button type="submit" class="pill-send-btn">[ Send Icon ]</button>
+                    <button type="button" class="pill-utility-btn" onclick="togglePicker('emoji')">Emoji</button>
+                    <button type="button" class="pill-utility-btn" onclick="togglePicker('gif')">GIF</button>
+                    <button type="button" class="pill-utility-btn" onclick="document.getElementById('file-upload-input').click()">Upload File</button>
+                    <input type="file" id="file-upload-input" style="display: none;" onchange="handleFileAttachment(event)">
+                </form>
+            </div>
+
+            <!-- DISCOVER GROUPS VIEW -->
+            <div id="discover-container" class="pane-view">
+                <header class="hub-top-bar">
+                    <div class="hub-search-wrapper">
+                        <input type="text" id="discover-search" placeholder="Search something like “chat fun!”" oninput="renderDiscoverCards()">
+                    </div>
+                </header>
+
+                <div class="discover-content-scroll">
+                    <div class="discover-header-row">
+                        <h1 class="discover-main-title">DISCOVER GROUPS</h1>
+                        <button class="create-group-pill-btn" onclick="openCreateModal('group')">Create Group +</button>
+                    </div>
+
+                    <div class="discover-card-container-box">
+                        <div id="discover-grid" class="discover-grid-cards"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar: List of Friends / List of Chat Members -->
+        <aside id="right-sidebar" class="right-sidebar">
+            <div class="right-friends-header">
+                <h3 id="right-sidebar-title">List of Friends</h3>
+                <div class="sidebar-divider" style="margin-top: 12px;"></div>
+            </div>
+            <div id="right-friends-empty" class="empty-state-center">
+                No Friends, try to add a friend!
+            </div>
+            <div id="right-friends-list" class="right-friends-stack"></div>
+            <div id="members-list" class="members-stack" style="display: none;"></div>
+        </aside>
+    </div>
+
+    <!-- ================= 5. MODALS & CONTEXT MENUS ================= -->
+    <!-- Friend Context Menu (Right-Click) -->
+    <div id="friend-context-menu" class="context-menu-box" style="display: none;">
+        <div class="context-item" onclick="executeContextAction('report')">Report</div>
+        <div class="context-item danger" onclick="executeContextAction('block')">Block</div>
+        <div class="context-item" onclick="executeContextAction('nickname')">Add friend nickname</div>
+        <div class="context-item" onclick="executeContextAction('pin')">Pin</div>
+        <div class="context-item" onclick="executeContextAction('invite')">Invite to group chat</div>
+        <div class="context-item" onclick="executeContextAction('ignore')">Ignore</div>
+        <div class="context-item" onclick="executeContextAction('mute')">Mute</div>
+    </div>
+
+    <!-- Server / Group Chat Context Menu (Right-Click) -->
+    <div id="server-context-menu" class="context-menu-box" style="display: none;">
+        <div class="context-item" onclick="executeServerContextAction('invite')">Invite to a Server</div>
+        <div class="context-item" onclick="executeServerContextAction('mark-read')">Mark as Read</div>
+        <div class="context-item" onclick="executeServerContextAction('mute')">Mute Server</div>
+        <div class="context-item" onclick="executeServerContextAction('edit')">Edit Group Info</div>
+        <div class="context-item danger" onclick="executeServerContextAction('leave')">Leave Server</div>
+    </div>
+
+    <!-- Friend Requests Modal -->
+    <div id="friend-requests-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h3>Friend Requests</h3>
+            <div id="pending-requests-stack" class="requests-stack"></div>
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button class="secondary-btn full-width" onclick="document.getElementById('friend-requests-modal').style.display='none'">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group / Add Friend Modal -->
+    <div id="create-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-tabs">
+                <button id="modal-tab-group" class="tab-pill active" onclick="switchModalTab('group')">Create Group</button>
+                <button id="modal-tab-dm" class="tab-pill" onclick="switchModalTab('dm')">Add Friend +</button>
+            </div>
+            <h3 id="modal-heading">Create Group +</h3>
+            <input type="text" id="modal-input" placeholder="Group Chat Name">
+            <input type="text" id="modal-desc-input" placeholder="Hello this is a Group Chat Description!">
+            <div id="group-banner-upload-wrap" style="margin-bottom: 12px;">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Group Image or GIF (Optional)</label>
+                <input type="file" id="group-banner-input" accept="image/*,.gif" onchange="handleGroupBannerUpload(event)" style="margin-bottom: 0;">
+            </div>
+            <div class="modal-actions">
+                <button class="secondary-btn" onclick="closeModal()">Cancel</button>
+                <button class="primary-btn" onclick="createNewChat()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile & Account Settings Modal -->
+    <div id="profile-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 440px;">
+            <h3>Profile & Account Settings</h3>
+            <div class="profile-preview-row">
+                <img id="profile-pfp-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=default" alt="Avatar" onclick="document.getElementById('custom-avatar-input').click()" title="Click to upload custom image or GIF avatar" style="cursor: pointer; object-fit: cover;">
+                <button type="button" class="secondary-btn" onclick="document.getElementById('custom-avatar-input').click()">Upload Avatar</button>
+                <input type="file" id="custom-avatar-input" accept="image/*,.gif" style="display: none;" onchange="handleCustomAvatarUpload(event)">
+            </div>
+
+            <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Username</label>
+            <input type="text" id="profile-username-input" placeholder="Username">
+
+            <div class="settings-row-toggle">
+                <span>Enable Desktop Notifications</span>
+                <input type="checkbox" id="notif-toggle-input" onchange="toggleNotificationsPreference(this)">
+            </div>
+
+            <hr class="modal-divider">
+
+            <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Custom Wallpaper (Image/GIF URL)</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <input type="text" id="wallpaper-url-input" placeholder="https://example.com/wallpaper.jpg" style="margin-bottom: 0;">
+                <button type="button" class="secondary-btn" onclick="applyCustomWallpaper()">Apply</button>
+            </div>
+
+            <div class="theme-settings-section">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:8px;">Custom Theme & Gradients</label>
+                <div class="theme-presets-row">
+                    <button type="button" class="theme-swatch" style="background-color: #ff6600;" onclick="applyThemePreset('#ff6600', '#000000', '#1c1c1c', 'dark')" title="HubPipe Dark"></button>
+                    <button type="button" class="theme-swatch" style="background-color: #ffffff; border-color: #888888;" onclick="applyThemePreset('#ff6600', '#ffffff', '#f3f4f6', 'light')" title="HubPipe Light Mode"></button>
+                    <button type="button" class="theme-swatch" style="background-color: #00b85c;" onclick="applyThemePreset('#00b85c', '#050f0a', '#122119', 'dark')" title="Emerald Green"></button>
+                    <button type="button" class="theme-swatch" style="background-color: #3b82f6;" onclick="applyThemePreset('#3b82f6', '#060b14', '#111827', 'dark')" title="Cyber Blue"></button>
+                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #ff6600, #ff0055);" onclick="applyGradientTheme('linear-gradient(135deg, #ff6600, #ff0055)', '#000000', '#1c1c1c')" title="Sunset Gradient"></button>
+                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #00b85c, #00d2ff);" onclick="applyGradientTheme('linear-gradient(135deg, #00b85c, #00d2ff)', '#020b08', '#0f1f18')" title="Aurora Gradient"></button>
+                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #a855f7, #ec4899);" onclick="applyGradientTheme('linear-gradient(135deg, #a855f7, #ec4899)', '#0d0614', '#1b1126')" title="Cyberpunk Gradient"></button>
+                </div>
+
+                <div class="custom-color-grid">
+                    <div class="color-picker-item">
+                        <span>Accent</span>
+                        <input type="color" id="theme-accent-picker" value="#ff6600" oninput="previewCustomTheme()">
+                    </div>
+                    <div class="color-picker-item">
+                        <span>Sidebar</span>
+                        <input type="color" id="theme-sidebar-picker" value="#000000" oninput="previewCustomTheme()">
+                    </div>
+                    <div class="color-picker-item">
+                        <span>Hub BG</span>
+                        <input type="color" id="theme-bg-picker" value="#1c1c1c" oninput="previewCustomTheme()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button class="secondary-btn" onclick="resetDefaultTheme()" style="margin-right: auto;">Reset Theme</button>
+                <button class="primary-btn" onclick="saveProfileChanges()">Save Changes</button>
+                <button class="secondary-btn" onclick="closeProfileModal()">Close</button>
+            </div>
+
+            <hr class="modal-divider">
+            <div class="danger-zone">
+                <button class="secondary-btn full-width" onclick="logOutApp()">Log Out</button>
+                <button class="danger-btn full-width" onclick="deleteAccountApp()">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
