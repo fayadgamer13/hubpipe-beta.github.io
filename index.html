@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HubPipe — Your Message, Your Privacy</title>
+    <title>HubPipe</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
 </head>
@@ -28,7 +28,7 @@
         <main id="tab-home" class="landing-content active">
             <div class="hero-container">
                 <div class="hero-illustration">
-                    <img src="Assets/Images/device.png" alt="HubPipe Devices" onerror="this.style.display='none';">
+                    <img src="Assets/Images/devices.png" alt="HubPipe Devices" onerror="this.style.display='none';">
                 </div>
                 <div class="hero-card">
                     <h1>HubPipe, Your Message, Your Privacy</h1>
@@ -39,6 +39,9 @@
                         <button class="secondary-btn" onclick="openAuthScreen('login')">Open in Browser</button>
                     </div>
                     <div class="divider-line"></div>
+                    <h1>HubPipe is under development!</h1>
+                    <p>HubPipe is still under development, so you may encounter bugs or features that aren't fully working yet. Since our built-in report system is still in progress, please report any issues on the <a href="https://github.com/fayadgamer13/hubpipe-beta.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub HubPipe Repo</a>.</p>
+
                 </div>
             </div>
         </main>
@@ -53,39 +56,41 @@
                     <h1 id="os-detect-title">Download HubPipe for your “OS NAME”</h1>
                     <p>Don’t see your Opreating System Download? scroll down to find yours</p>
                     <div class="divider-line"></div>
-                    <div class="hero-actions">
-                        <button class="primary-btn" id="os-download-btn" onclick="alert('HubPipe installer queued for your device!')">Downloads for [OS NAME]</button>
+                    <div class="hero-actions" style="flex-wrap: wrap;">
+                        <button class="primary-btn" id="os-download-btn" onclick="showCustomDialog('Download Queued', 'HubPipe installer queued for your device!')">Downloads for [OS NAME]</button>
+                        <button class="secondary-btn" id="pwa-install-btn" onclick="installWebApp()">Download HubPipe web as app</button>
                     </div>
+                    <p class="firefox-note">Note: Firefox does not support downloading website as an app yet</p>
                     <div class="divider-line"></div>
                     <div style="margin-top: 10px;">
-                        <span class="text-link" style="font-size: 16px; font-weight: 600; color: #ffffff;" onclick="scrollToOsGrid()">Check Here to find your OS</span>
+                        <span class="text-link" style="font-size: 16px; font-weight: 600;" onclick="scrollToOsGrid()">Check Here to find your OS</span>
                     </div>
                 </div>
             </div>
 
             <!-- Expanded OS Selector Section -->
             <div id="os-grid-section" style="max-width: 800px; width: 100%; margin: 40px auto; padding: 20px;">
-                <h3 style="color: var(--primary); margin-bottom: 16px; text-align: center;">All Available Operating Systems</h3>
+                <h3 style="color: var(--primary); margin-bottom: 16px; text-align: center;">All Available Operating Systems(Under development)</h3>
                 <div class="os-grid">
                     <div class="os-box">
                         <h3>Windows</h3>
                         <p>Windows 10 / 11 (64-bit)</p>
-                        <button class="primary-btn" onclick="alert('Windows installer downloaded!')">Download Now</button>
+                        <button class="primary-btn" onclick="showCustomDialog('Windows Download', 'Windows installer downloaded!')">Download Now</button>
                     </div>
                     <div class="os-box">
                         <h3>macOS</h3>
                         <p>Intel & Apple Silicon</p>
-                        <button class="primary-btn" onclick="alert('macOS DMG downloaded!')">Download Now</button>
+                        <button class="primary-btn" onclick="showCustomDialog('macOS Download', 'macOS DMG downloaded!')">Download Now</button>
                     </div>
                     <div class="os-box">
                         <h3>Android</h3>
                         <p>Android 10+ APK</p>
-                        <button class="primary-btn" onclick="alert('Android APK downloaded!')">Download Now</button>
+                        <button class="primary-btn" onclick="showCustomDialog('Android Download', 'Android APK downloaded!')">Download Now</button>
                     </div>
                     <div class="os-box">
                         <h3>Linux</h3>
                         <p>AppImage / .deb</p>
-                        <button class="primary-btn" onclick="alert('Linux package downloaded!')">Download Now</button>
+                        <button class="primary-btn" onclick="showCustomDialog('Linux Download', 'Linux package downloaded!')">Download Now</button>
                     </div>
                 </div>
                 <div style="margin-top: 24px; text-align: center;">
@@ -111,7 +116,6 @@
                 </div>
             </div>
 
-            <!-- Collapsible Report Form Section -->
             <div id="report-form-section" style="display: none; max-width: 560px; width: 100%; margin: 28px auto; background-color: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; text-align: left;">
                 <h3 style="color: var(--primary); margin-bottom: 14px;">Submit Your Report</h3>
                 <form class="simple-form" onsubmit="handleReportSubmit(event)">
@@ -134,17 +138,14 @@
     <!-- ================= 2. AUTHENTICATION SCREEN ================= -->
     <div id="auth-screen" class="screen">
         <div class="auth-wrapper-centered">
-            <!-- Top Centered Brand Logo -->
             <div class="auth-brand-header" onclick="backToLanding()" title="Back to Home">
                 <img src="Assets/Images/logo-wordmark-light.png" alt="HubPipe" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                 <span style="display:none; font-weight:800; color:var(--primary); font-size:26px;">HubPipe</span>
             </div>
 
-            <!-- Pure Black Rounded Card -->
             <div class="auth-card-screenshot">
                 <h2 id="auth-title">Login</h2>
 
-                <!-- Login / Sign Up Form -->
                 <form id="auth-form" onsubmit="handleAuth(event)">
                     <div class="input-group">
                         <label id="email-label">Email or Username</label>
@@ -180,7 +181,6 @@
                     <button type="submit" id="main-auth-submit-btn" class="dialog-change-btn" style="display: none; margin-top: 20px;">Create & Verify</button>
                 </form>
 
-                <!-- Forgot Password Dialog Form -->
                 <form id="forgot-form" style="display: none;" onsubmit="handleForgotPassword(event)">
                     <p class="dialog-subtitle">Enter your Email to change your password</p>
                     <div class="input-group" style="margin-top: 14px;">
@@ -198,7 +198,7 @@
                         To complete setting up your<br>Account. check your mailbox<br>for an email from HubPipe<br>to verify your account.<br><br>
                         <span style="font-size: 13px; color: #888888;">if you don't see an mail check your<br>spam folder</span>
                     </p>
-                    <button type="button" id="inbox-action-btn" class="dialog-change-btn" onclick="switchAuthMode('setup')">Ok, Open Mail</button>
+                    <button type="button" id="inbox-action-btn" class="dialog-change-btn" onclick="verifyEmailAndProceedToSetup()">Ok, Open Mail</button>
                 </div>
 
                 <!-- Final Setup Form -->
@@ -211,7 +211,6 @@
                 </form>
             </div>
 
-            <!-- Two Bottom Pill Buttons Outside the Card -->
             <div class="auth-bottom-buttons" id="auth-bottom-buttons">
                 <button type="button" id="btn-bottom-login" class="pill-btn-light-orange" onclick="handleBottomAuthClick('login')">Login</button>
                 <button type="button" id="btn-bottom-signup" class="pill-btn-orange" onclick="handleBottomAuthClick('signup')">Sign Up</button>
@@ -232,6 +231,9 @@
 
     <!-- ================= 4. MAIN HUB & CHAT APPLICATION SCREEN ================= -->
     <div id="chat-screen" class="screen">
+        <!-- Mobile Drawer Backdrop -->
+        <div id="mobile-drawer-backdrop" class="mobile-backdrop" onclick="closeMobileDrawers()"></div>
+
         <!-- Left Navigation Sidebar -->
         <aside id="left-sidebar" class="left-sidebar">
             <div class="sidebar-top-header">
@@ -245,15 +247,14 @@
                     </div>
                 </div>
                 <button class="home-circle-btn" onclick="openHubView()" title="Hub Home">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 3L4 9v12h5v-7h6v7h5V9l-8-6z"/>
-                    </svg>
+                    <img src="Assets/Images/Icons/home.png" alt="Home" class="ui-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none;">🏠</span>
                 </button>
             </div>
 
             <div class="sidebar-divider"></div>
 
-            <!-- Top Friends Section (Hidden when 0 friends) -->
+            <!-- Top Friends Section -->
             <div id="top-friends-section" style="display: none;">
                 <div class="top-friends-heading">Top Friends</div>
                 <div id="top-friends-row" class="top-friends-row"></div>
@@ -268,13 +269,10 @@
                 <div id="rooms-list" class="groups-card-list"></div>
             </div>
 
-            <!-- Minimized Rail Quick Add Button (Visible only when collapsed) -->
             <button class="minimized-add-btn" onclick="openCreateModal('group')" title="Join or Create +">+</button>
-
-            <!-- Collapse Sidebar Tab -->
             <button class="sidebar-collapse-tab" onclick="toggleLeftSidebar()" title="Toggle Sidebar">&lt;</button>
 
-            <!-- Bottom "Get Started by" & User Profile Card -->
+            <!-- Bottom Dock -->
             <div class="sidebar-bottom-dock">
                 <div class="sidebar-divider" style="margin-bottom: 10px;"></div>
                 <div class="get-started-label">Get Started by</div>
@@ -283,29 +281,39 @@
                     <button class="green-action-btn" onclick="toggleDiscoverView()">Discover</button>
                 </div>
 
-                <div class="user-profile-pill-card" onclick="openProfileModal()">
+                <div class="user-profile-pill-card" onclick="openOwnProfileModal()">
                     <img id="footer-pfp" src="https://api.dicebear.com/7.x/bottts/svg?seed=hubpipe" alt="Avatar">
                     <div class="user-meta">
                         <div id="footer-username">@Username1234</div>
-                        <div id="footer-tag">#4321</div>
+                        <div id="footer-tag">#4321 <span id="footer-status-badge" class="status-pill-tag">• Online</span></div>
                     </div>
-                    <span class="gear-icon">⚙️</span>
+                    <button type="button" class="gear-icon-btn" onclick="event.stopPropagation(); openProfileModal();" title="Settings">
+                        <img src="Assets/Images/Icons/settings.png" alt="Settings" class="ui-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span class="gear-icon" style="display:none;">⚙️</span>
+                    </button>
                 </div>
             </div>
         </aside>
 
         <!-- Center Hub / Chat / Discover Pane -->
         <main class="center-pane">
-            <!-- Top Search & Icons Bar -->
+            <!-- Top Search, Mobile Nav, Pins & Icons Bar -->
             <header class="hub-top-bar" id="main-hub-top-bar">
+                <button type="button" class="mobile-menu-btn" onclick="toggleMobileLeftSidebar()" title="Menu">☰</button>
                 <div class="hub-search-wrapper">
-                    <span id="hub-pin-icon" class="top-bar-icon" style="display: none;">📌</span>
+                    <button type="button" id="hub-pin-btn" class="top-icon-inline-btn" style="display: none;" onclick="openPinnedMessagesModal()" title="View Pinned Messages">
+                        <img src="Assets/Images/Icons/pin.png" alt="Pinned" class="top-bar-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span style="display:none;">📌</span>
+                    </button>
                     <input type="text" id="hub-search-input" placeholder="Search something like “chat!”" oninput="handleHubSearch()">
                 </div>
-                <span id="hub-people-icon" class="top-bar-icon" style="display: none; cursor: pointer;" onclick="toggleRightSidebar()" title="Toggle Right Sidebar">👥</span>
+                <button id="hub-people-icon" class="top-icon-btn" style="display: none;" onclick="toggleRightSidebar()" title="Toggle Friends / Members">
+                    <img src="Assets/Images/Icons/friends.png" alt="Friends" class="top-bar-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none;">👥</span>
+                </button>
             </header>
 
-            <!-- HUB HOME VIEW (Default Beginner View) -->
+            <!-- HUB HOME VIEW -->
             <div id="hub-home-view" class="pane-view active">
                 <div class="hub-content-scroll">
                     <h1 class="hub-main-heading">Hub</h1>
@@ -328,25 +336,73 @@
 
             <!-- ACTIVE GROUP / DM CHAT VIEW -->
             <div id="active-chat-container" class="pane-view">
-                <div class="chat-banner-area">
+                <div id="chat-banner-area" class="chat-banner-area">
                     <img id="current-room-banner" src="Assets/Images/logo-orange.png" alt="Group Banner" class="chat-banner-thumb">
                     <h1 class="chat-banner-title" id="current-room-title">Group Chat Name</h1>
                     <p class="chat-banner-desc" id="current-room-desc">Hello this is a group chat Description!</p>
                     <div class="chat-banner-date" id="current-room-date">Nov 19 2026</div>
+
+                    <!-- Call, Video Call, Screen Stream & Server Channel/Voice Controls -->
+                    <div class="chat-action-toolbar">
+                        <button type="button" class="toolbar-chip-btn" onclick="startCallSession('Voice Call')">📞 Call</button>
+                        <button type="button" class="toolbar-chip-btn" onclick="startCallSession('Video Call')">🎥 Video Call</button>
+                        <button type="button" class="toolbar-chip-btn" onclick="startCallSession('Screen Stream')">🖥️ Stream Screen</button>
+                        <button type="button" id="add-channel-btn" class="toolbar-chip-btn" onclick="addGroupChannel()"># Add Channel</button>
+                        <button type="button" id="add-voice-btn" class="toolbar-chip-btn" onclick="addGroupVoiceChannel()">🔊 Add Voice</button>
+                    </div>
+
+                    <!-- Channels & Voice Strip for Group Chats -->
+                    <div id="group-channels-strip" class="channels-strip" style="display: none;"></div>
+                </div>
+
+                <!-- Active Call / Video / Screen Stream Banner -->
+                <div id="active-call-banner" class="call-session-bar" style="display: none;">
+                    <span id="active-call-label">📞 Voice Call active</span>
+                    <button type="button" class="danger-btn" style="padding: 5px 12px; font-size: 12px;" onclick="endCallSession()">End</button>
                 </div>
 
                 <div id="messages-log" class="messages-log"></div>
 
+                <!-- Categorized Emoji & Tenor/Giphy GIF Picker -->
                 <div id="media-picker" class="media-picker" style="display: none;">
-                    <div id="picker-content" class="picker-grid"></div>
+                    <div id="emoji-picker-panel" style="display: none;">
+                        <div class="picker-tabs-row" id="emoji-category-tabs"></div>
+                        <div id="emoji-picker-grid" class="picker-grid"></div>
+                    </div>
+
+                    <div id="gif-picker-panel" style="display: none;">
+                        <div class="gif-search-bar">
+                            <input type="text" id="gif-search-input" placeholder="Search Tenor & Giphy GIFs..." onkeydown="if(event.key==='Enter'){event.preventDefault(); searchGifs();}">
+                            <button type="button" class="primary-btn gif-search-btn" onclick="searchGifs()">Search</button>
+                            <div class="gif-source-pills">
+                                <button type="button" class="gif-source-btn active" data-source="all" onclick="setGifSource('all', this)">All</button>
+                                <button type="button" class="gif-source-btn" data-source="tenor" onclick="setGifSource('tenor', this)">Tenor</button>
+                                <button type="button" class="gif-source-btn" data-source="giphy" onclick="setGifSource('giphy', this)">Giphy</button>
+                            </div>
+                        </div>
+                        <div id="gif-picker-grid" class="gif-picker-grid"></div>
+                    </div>
                 </div>
 
+                <!-- Chat Input Bar with Icon Assets -->
                 <form class="chat-input-area" onsubmit="sendMessage(event)">
                     <input type="text" id="message-input" placeholder="Type anything here..." autocomplete="off">
-                    <button type="submit" class="pill-send-btn">[ Send Icon ]</button>
-                    <button type="button" class="pill-utility-btn" onclick="togglePicker('emoji')">Emoji</button>
-                    <button type="button" class="pill-utility-btn" onclick="togglePicker('gif')">GIF</button>
-                    <button type="button" class="pill-utility-btn" onclick="document.getElementById('file-upload-input').click()">Upload File</button>
+                    <button type="submit" class="icon-action-btn send-btn" title="Send">
+                        <img src="Assets/Images/Icons/send.png" alt="Send" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span style="display:none;">Send</span>
+                    </button>
+                    <button type="button" class="icon-action-btn" onclick="togglePicker('emoji')" title="Emojis">
+                        <img src="Assets/Images/Icons/emoji.png" alt="Emoji" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span style="display:none;">Emoji</span>
+                    </button>
+                    <button type="button" class="icon-action-btn" onclick="togglePicker('gif')" title="GIFs (Tenor & Giphy)">
+                        <img src="Assets/Images/Icons/gif.png" alt="GIF" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span style="display:none;">GIF</span>
+                    </button>
+                    <button type="button" class="icon-action-btn" onclick="document.getElementById('file-upload-input').click()" title="Upload File">
+                        <img src="Assets/Images/Icons/upload.png" alt="Upload File" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span style="display:none;">Upload</span>
+                    </button>
                     <input type="file" id="file-upload-input" style="display: none;" onchange="handleFileAttachment(event)">
                 </form>
             </div>
@@ -387,33 +443,133 @@
     </div>
 
     <!-- ================= 5. MODALS & CONTEXT MENUS ================= -->
+    <!-- Custom Alert / Status Dialog Modal -->
+    <div id="custom-dialog-modal" class="modal-overlay" style="display: none; z-index: 2000;">
+        <div class="modal-box" style="text-align: center; max-width: 380px;">
+            <h3 id="custom-dialog-title">Notice</h3>
+            <p id="custom-dialog-message" style="color: var(--text-muted); margin: 14px 0 20px 0; font-size: 14px; line-height: 1.45;"></p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" class="primary-btn" onclick="closeCustomDialog()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pinned Messages Modal -->
+    <div id="pinned-messages-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 440px;">
+            <h3>Pinned Messages</h3>
+            <div id="pinned-messages-list" class="pinned-list-box"></div>
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button type="button" class="secondary-btn full-width" onclick="closePinnedMessagesModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile View Modal (Clicking Another User) -->
+    <div id="user-profile-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box profile-card-modal" style="max-width: 420px; padding: 0; overflow: hidden;">
+            <div id="view-user-banner" class="profile-view-banner"></div>
+            <div style="padding: 0 24px 24px 24px;">
+                <div class="profile-view-avatar-row">
+                    <img id="view-user-pfp" src="" alt="Avatar">
+                    <span id="view-user-status-badge" class="status-pill-tag">Online</span>
+                </div>
+                <h3 id="view-user-username" style="margin-bottom: 4px;">@User</h3>
+                <p id="view-user-bio" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"></p>
+                <div id="view-user-since" style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;"></div>
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="startCallSession('Voice Call'); closeUserProfileModal();">📞 Call</button>
+                    <button type="button" class="primary-btn" onclick="closeUserProfileModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Own Profile Customizer Modal -->
+    <div id="own-profile-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 460px;">
+            <h3>Customize Your Profile</h3>
+            <div id="own-banner-preview" class="profile-view-banner" style="border-radius: 12px; margin-bottom: 14px;"></div>
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Status</label>
+            <select id="own-status-select">
+                <option value="Online">🟢 Online</option>
+                <option value="Sleep">🌙 Sleep</option>
+                <option value="Do Not Disturb">⛔ Do Not Disturb</option>
+                <option value="Offline">⚫ Offline</option>
+            </select>
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Username</label>
+            <input type="text" id="own-profile-username" placeholder="Username">
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Name Display Style</label>
+            <select id="own-name-style">
+                <option value="normal">Normal (@Name)</option>
+                <option value="bold-accent">Accent Highlight</option>
+                <option value="italic-subtle">Italic Subtle</option>
+            </select>
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Bio</label>
+            <textarea id="own-profile-bio" rows="2" placeholder="Write a short bio..."></textarea>
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Banner Color or Image URL</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <input type="color" id="own-banner-color" value="#ff6600" style="width: 52px; height: 42px; padding: 2px; margin-bottom: 0;">
+                <input type="text" id="own-banner-url" placeholder="https://example.com/banner.jpg" style="margin-bottom: 0;">
+            </div>
+            <button type="button" class="secondary-btn full-width" style="margin-bottom: 12px;" onclick="document.getElementById('own-banner-file-input').click()">Upload Banner Image / GIF</button>
+            <input type="file" id="own-banner-file-input" accept="image/*,.gif" style="display: none;" onchange="handleOwnBannerFileUpload(event)">
+
+            <div class="modal-actions">
+                <button type="button" class="primary-btn" onclick="saveOwnProfileCustomization()">Save Profile</button>
+                <button type="button" class="secondary-btn" onclick="closeOwnProfileModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Friend Context Menu (Right-Click) -->
     <div id="friend-context-menu" class="context-menu-box" style="display: none;">
-        <div class="context-item" onclick="executeContextAction('report')">Report</div>
-        <div class="context-item danger" onclick="executeContextAction('block')">Block</div>
+        <div class="context-item" onclick="executeContextAction('profile')">View Profile</div>
+        <div class="context-item" onclick="executeContextAction('call')">📞 Voice Call</div>
+        <div class="context-item" onclick="executeContextAction('videocall')">🎥 Video Call</div>
+        <div class="context-item" onclick="executeContextAction('stream')">🖥️ Stream Screen</div>
         <div class="context-item" onclick="executeContextAction('nickname')">Add friend nickname</div>
         <div class="context-item" onclick="executeContextAction('pin')">Pin</div>
         <div class="context-item" onclick="executeContextAction('invite')">Invite to group chat</div>
         <div class="context-item" onclick="executeContextAction('ignore')">Ignore</div>
         <div class="context-item" onclick="executeContextAction('mute')">Mute</div>
+        <div class="context-item" onclick="executeContextAction('report')">Report</div>
+        <div class="context-item danger" onclick="executeContextAction('block')">Block</div>
     </div>
 
     <!-- Server / Group Chat Context Menu (Right-Click) -->
     <div id="server-context-menu" class="context-menu-box" style="display: none;">
         <div class="context-item" onclick="executeServerContextAction('invite')">Invite to a Server</div>
+        <div class="context-item" onclick="executeServerContextAction('add-channel')"># Add Text Channel</div>
+        <div class="context-item" onclick="executeServerContextAction('add-voice')">🔊 Add Voice Channel</div>
         <div class="context-item" onclick="executeServerContextAction('mark-read')">Mark as Read</div>
         <div class="context-item" onclick="executeServerContextAction('mute')">Mute Server</div>
         <div class="context-item" onclick="executeServerContextAction('edit')">Edit Group Info</div>
         <div class="context-item danger" onclick="executeServerContextAction('leave')">Leave Server</div>
     </div>
 
-    <!-- Friend Requests Modal -->
-    <div id="friend-requests-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-box">
-            <h3>Friend Requests</h3>
-            <div id="pending-requests-stack" class="requests-stack"></div>
-            <div class="modal-actions" style="margin-top: 16px;">
-                <button class="secondary-btn full-width" onclick="document.getElementById('friend-requests-modal').style.display='none'">Close</button>
+    <!-- Message / File Attachment Context Menu (Right-Click) -->
+    <div id="message-context-menu" class="context-menu-box" style="display: none;">
+        <div class="context-item" onclick="executeMessageContextAction('open')">Open / Download File</div>
+        <div class="context-item" onclick="executeMessageContextAction('copy')">Copy Message</div>
+        <div class="context-item" onclick="executeMessageContextAction('react')">React with 👍</div>
+        <div class="context-item" onclick="executeMessageContextAction('pin')">Pin Message</div>
+        <div class="context-item danger" onclick="executeMessageContextAction('delete')">Delete Message</div>
+    </div>
+
+    <!-- Friend Request Prompt Modal (Accept / Decline) -->
+    <div id="friend-request-prompt-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="text-align: center;">
+            <h3>Friend Request</h3>
+            <p id="friend-request-prompt-text" style="color: var(--text-muted); margin: 14px 0 20px 0; font-size: 14px;"></p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" class="primary-btn" onclick="respondToFriendRequestPrompt(true)">Accept Friendship</button>
+                <button type="button" class="secondary-btn" onclick="respondToFriendRequestPrompt(false)">Decline</button>
             </div>
         </div>
     </div>
@@ -429,8 +585,15 @@
             <input type="text" id="modal-input" placeholder="Group Chat Name">
             <input type="text" id="modal-desc-input" placeholder="Hello this is a Group Chat Description!">
             <div id="group-banner-upload-wrap" style="margin-bottom: 12px;">
-                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Group Image or GIF (Optional)</label>
-                <input type="file" id="group-banner-input" accept="image/*,.gif" onchange="handleGroupBannerUpload(event)" style="margin-bottom: 0;">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Group Icon or GIF (Optional)</label>
+                <input type="file" id="group-banner-input" accept="image/*,.gif" onchange="handleGroupBannerUpload(event)" style="margin-bottom: 6px;">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Group Banner Image or GIF (Optional)</label>
+                <input type="file" id="group-header-banner-input" accept="image/*,.gif" onchange="handleGroupHeaderBannerUpload(event)" style="margin-bottom: 6px;">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Visibility</label>
+                <select id="group-visibility-select" style="margin-bottom: 0;">
+                    <option value="public">Public (Shows in Discover)</option>
+                    <option value="private">Private (Invite Only)</option>
+                </select>
             </div>
             <div class="modal-actions">
                 <button class="secondary-btn" onclick="closeModal()">Cancel</button>
@@ -439,33 +602,50 @@
         </div>
     </div>
 
-    <!-- Profile & Account Settings Modal -->
+    <!-- Categorized Profile & Account Settings Modal -->
     <div id="profile-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-box" style="max-width: 440px;">
-            <h3>Profile & Account Settings</h3>
-            <div class="profile-preview-row">
-                <img id="profile-pfp-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=default" alt="Avatar" onclick="document.getElementById('custom-avatar-input').click()" title="Click to upload custom image or GIF avatar" style="cursor: pointer; object-fit: cover;">
-                <button type="button" class="secondary-btn" onclick="document.getElementById('custom-avatar-input').click()">Upload Avatar</button>
-                <input type="file" id="custom-avatar-input" accept="image/*,.gif" style="display: none;" onchange="handleCustomAvatarUpload(event)">
+        <div class="modal-box" style="max-width: 540px;">
+            <div class="settings-modal-header">
+                <h3>Settings</h3>
+                <button type="button" class="mode-switch-pill" id="light-dark-toggle-btn" onclick="toggleLightDarkMode()">☀️ Light Mode</button>
             </div>
 
-            <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Username</label>
-            <input type="text" id="profile-username-input" placeholder="Username">
-
-            <div class="settings-row-toggle">
-                <span>Enable Desktop Notifications</span>
-                <input type="checkbox" id="notif-toggle-input" onchange="toggleNotificationsPreference(this)">
+            <!-- Settings Category Tabs -->
+            <div class="settings-category-tabs">
+                <button type="button" class="settings-cat-btn active" data-cat="profile" onclick="switchSettingsCategory('profile', this)">Profile</button>
+                <button type="button" class="settings-cat-btn" data-cat="theme" onclick="switchSettingsCategory('theme', this)">Theme</button>
+                <button type="button" class="settings-cat-btn" data-cat="wallpaper" onclick="switchSettingsCategory('wallpaper', this)">Wallpaper</button>
+                <button type="button" class="settings-cat-btn" data-cat="notifications" onclick="switchSettingsCategory('notifications', this)">Notifications</button>
+                <button type="button" class="settings-cat-btn" data-cat="messages" onclick="switchSettingsCategory('messages', this)">Messages</button>
+                <button type="button" class="settings-cat-btn" data-cat="permissions" onclick="switchSettingsCategory('permissions', this)">Permissions</button>
+                <button type="button" class="settings-cat-btn" data-cat="keybinds" onclick="switchSettingsCategory('keybinds', this)">Keybinds</button>
+                <button type="button" class="settings-cat-btn" data-cat="language" onclick="switchSettingsCategory('language', this)">Language</button>
+                <button type="button" class="settings-cat-btn" data-cat="account" onclick="switchSettingsCategory('account', this)">Account</button>
             </div>
 
-            <hr class="modal-divider">
+            <!-- Category 1: Profile & Multi-Account Switcher (up to 10 accounts) -->
+            <div id="settings-cat-profile" class="settings-cat-panel active">
+                <div class="profile-preview-row">
+                    <img id="profile-pfp-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=default" alt="Avatar" onclick="document.getElementById('custom-avatar-input').click()" title="Click to upload custom image or GIF avatar" style="cursor: pointer;">
+                    <button type="button" class="secondary-btn" onclick="document.getElementById('custom-avatar-input').click()">Upload Image / GIF</button>
+                    <button type="button" class="secondary-btn" onclick="openOwnProfileModal()">Customize Profile</button>
+                    <input type="file" id="custom-avatar-input" accept="image/*,.gif" style="display: none;" onchange="handleCustomAvatarUpload(event)">
+                </div>
 
-            <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Custom Wallpaper (Image/GIF URL)</label>
-            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                <input type="text" id="wallpaper-url-input" placeholder="https://example.com/wallpaper.jpg" style="margin-bottom: 0;">
-                <button type="button" class="secondary-btn" onclick="applyCustomWallpaper()">Apply</button>
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Username</label>
+                <input type="text" id="profile-username-input" placeholder="Username">
+
+                <hr class="modal-divider">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Saved Accounts (<span id="saved-accounts-count">0</span>/10)</label>
+                <div id="saved-accounts-list" class="accounts-stack-box"></div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <input type="text" id="new-account-username" placeholder="Add account username..." style="margin-bottom: 0;">
+                    <button type="button" class="secondary-btn" onclick="addSavedAccount()">+ Add Account</button>
+                </div>
             </div>
 
-            <div class="theme-settings-section">
+            <!-- Category 2: Custom Theme & Gradients -->
+            <div id="settings-cat-theme" class="settings-cat-panel">
                 <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:8px;">Custom Theme & Gradients</label>
                 <div class="theme-presets-row">
                     <button type="button" class="theme-swatch" style="background-color: #ff6600;" onclick="applyThemePreset('#ff6600', '#000000', '#1c1c1c', 'dark')" title="HubPipe Dark"></button>
@@ -493,16 +673,112 @@
                 </div>
             </div>
 
+            <!-- Category 3: Custom Wallpaper -->
+            <div id="settings-cat-wallpaper" class="settings-cat-panel">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Custom Wallpaper (Image/GIF URL)</label>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <input type="text" id="wallpaper-url-input" placeholder="https://example.com/wallpaper.jpg" style="margin-bottom: 0;">
+                    <button type="button" class="secondary-btn" onclick="applyCustomWallpaper()">Apply</button>
+                </div>
+                <button type="button" class="secondary-btn full-width" onclick="document.getElementById('wallpaper-file-input').click()">Upload Wallpaper Image / GIF</button>
+                <input type="file" id="wallpaper-file-input" accept="image/*,.gif" style="display: none;" onchange="handleWallpaperUpload(event)">
+            </div>
+
+            <!-- Category 4: Notifications & Audio -->
+            <div id="settings-cat-notifications" class="settings-cat-panel">
+                <div class="settings-row-toggle">
+                    <span>Enable Desktop Notifications</span>
+                    <input type="checkbox" id="notif-toggle-input" onchange="toggleNotificationsPreference(this)">
+                </div>
+                <div class="settings-row-toggle">
+                    <span>Notify when a friend comes online</span>
+                    <input type="checkbox" id="notif-online-input">
+                </div>
+                <div class="settings-row-toggle">
+                    <span>Notify when someone updates profile</span>
+                    <input type="checkbox" id="notif-profile-input">
+                </div>
+                <div class="settings-row-toggle">
+                    <span>Notify when someone replies</span>
+                    <input type="checkbox" id="notif-reply-input" checked>
+                </div>
+                <div class="settings-row-toggle">
+                    <span>Notify when someone reacts</span>
+                    <input type="checkbox" id="notif-react-input" checked>
+                </div>
+
+                <hr class="modal-divider">
+                <div class="settings-row-toggle">
+                    <span>Notification Sound</span>
+                    <input type="checkbox" id="notif-sound-enabled" checked>
+                </div>
+                <select id="notif-sound-preset">
+                    <option value="chime">HubPipe Chime</option>
+                    <option value="pop">Soft Pop</option>
+                    <option value="ping">Alert Ping</option>
+                </select>
+                <button type="button" class="secondary-btn full-width" onclick="document.getElementById('notif-audio-file').click()">Import Custom Notification Audio</button>
+                <input type="file" id="notif-audio-file" accept="audio/*" style="display: none;" onchange="handleNotificationAudioImport(event)">
+            </div>
+
+            <!-- Category 5: Message Permissions -->
+            <div id="settings-cat-messages" class="settings-cat-panel">
+                <div class="settings-row-toggle">
+                    <span>Sensitive Content Filter</span>
+                    <input type="checkbox" id="msg-sensitive-filter" checked>
+                </div>
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Direct Message Permissions</label>
+                <select id="msg-dm-permission">
+                    <option value="everyone">Everyone</option>
+                    <option value="friends">Friends Only</option>
+                    <option value="nobody">No One</option>
+                </select>
+            </div>
+
+            <!-- Category 6: Microphone & Camera Permissions -->
+            <div id="settings-cat-permissions" class="settings-cat-panel">
+                <div class="settings-row-toggle">
+                    <span>Allow Microphone Access</span>
+                    <input type="checkbox" id="perm-mic-toggle" onchange="requestMediaPermission('audio', this)">
+                </div>
+                <div class="settings-row-toggle">
+                    <span>Allow Camera Access</span>
+                    <input type="checkbox" id="perm-cam-toggle" onchange="requestMediaPermission('video', this)">
+                </div>
+            </div>
+
+            <!-- Category 7: Custom Keybinds -->
+            <div id="settings-cat-keybinds" class="settings-cat-panel">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Toggle Left Sidebar Keybind</label>
+                <input type="text" id="keybind-sidebar-input" value="Ctrl+B">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Open Settings Keybind</label>
+                <input type="text" id="keybind-settings-input" value="Ctrl+,">
+            </div>
+
+            <!-- Category 8: Language -->
+            <div id="settings-cat-language" class="settings-cat-panel">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">App Language</label>
+                <select id="app-language-select">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="ja">日本語</option>
+                </select>
+            </div>
+
+            <!-- Category 9: Account -->
+            <div id="settings-cat-account" class="settings-cat-panel">
+                <div class="danger-zone">
+                    <button class="secondary-btn full-width" onclick="logOutApp()">Log Out</button>
+                    <button class="danger-btn full-width" onclick="deleteAccountApp()">Delete Account</button>
+                </div>
+            </div>
+
             <div class="modal-actions" style="margin-top: 16px;">
                 <button class="secondary-btn" onclick="resetDefaultTheme()" style="margin-right: auto;">Reset Theme</button>
                 <button class="primary-btn" onclick="saveProfileChanges()">Save Changes</button>
                 <button class="secondary-btn" onclick="closeProfileModal()">Close</button>
-            </div>
-
-            <hr class="modal-divider">
-            <div class="danger-zone">
-                <button class="secondary-btn full-width" onclick="logOutApp()">Log Out</button>
-                <button class="danger-btn full-width" onclick="deleteAccountApp()">Delete Account</button>
             </div>
         </div>
     </div>

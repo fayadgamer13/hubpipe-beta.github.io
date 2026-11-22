@@ -40,6 +40,57 @@ body {
     color: var(--text-main);
     height: 100vh;
     overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.93) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes contextMenuPop {
+    from {
+        opacity: 0;
+        transform: scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes messageIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hubpipePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.85; }
 }
 
 .screen {
@@ -50,6 +101,7 @@ body {
 
 .screen.active {
     display: flex;
+    animation: fadeSlideUp 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 button {
@@ -59,7 +111,11 @@ button {
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.15s ease, transform 0.15s ease;
+    transition: background-color 0.16s ease, transform 0.14s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+}
+
+button:active {
+    transform: scale(0.95);
 }
 
 .primary-btn {
@@ -69,6 +125,8 @@ button {
 
 .primary-btn:hover {
     background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 102, 0, 0.28);
 }
 
 .secondary-btn {
@@ -102,11 +160,77 @@ input, textarea, select {
     color: var(--text-main);
     font-size: 14px;
     margin-bottom: 12px;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.2s ease;
 }
 
 input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: #ff6600;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.22);
+}
+
+.modal-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--border);
+    margin: 14px 0;
+}
+
+/* Custom Icon Assets */
+.ui-icon-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    transition: transform 0.16s ease;
+}
+
+.top-bar-icon-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    transition: transform 0.16s ease;
+}
+
+.top-icon-btn {
+    position: absolute;
+    right: 18px;
+    background: transparent;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-icon-btn:hover .top-bar-icon-img {
+    transform: scale(1.12);
+}
+
+.top-icon-inline-btn {
+    background: transparent;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.top-icon-inline-btn:hover .top-bar-icon-img {
+    transform: scale(1.12);
+}
+
+.member-crown-icon {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.status-pill-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--success);
+    margin-left: 4px;
 }
 
 /* ================= 1. LANDING, DOWNLOADS & REPORT ================= */
@@ -122,7 +246,9 @@ input:focus, textarea:focus, select:focus {
     align-items: center;
     padding: 18px 40px;
     background-color: var(--bg-dark);
-    border-bottom: 1px solid #222222;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .brand-logo {
@@ -138,8 +264,9 @@ input:focus, textarea:focus, select:focus {
 
 .nav-links {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .nav-btn {
@@ -151,7 +278,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .nav-btn:hover {
-    color: #ff6600;
+    color: var(--primary);
 }
 
 .top-nav .primary-btn {
@@ -172,6 +299,7 @@ input:focus, textarea:focus, select:focus {
 .landing-content.active {
     display: flex;
     flex-direction: column;
+    animation: fadeSlideUp 0.22s ease-out;
 }
 
 .hero-container {
@@ -192,12 +320,17 @@ input:focus, textarea:focus, select:focus {
     max-width: 460px;
     width: 100%;
     height: auto;
+    transition: transform 0.3s ease;
+}
+
+.hero-illustration img:hover {
+    transform: translateY(-4px);
 }
 
 .hero-card h1 {
     font-size: 38px;
     font-weight: 700;
-    color: #ff6600;
+    color: var(--primary);
     margin-bottom: 10px;
 }
 
@@ -205,6 +338,13 @@ input:focus, textarea:focus, select:focus {
     color: var(--text-main);
     font-size: 16px;
     margin-bottom: 24px;
+}
+
+.firefox-note {
+    font-size: 13px !important;
+    color: var(--text-muted) !important;
+    margin-top: 12px !important;
+    margin-bottom: 0 !important;
 }
 
 .divider-line {
@@ -249,6 +389,12 @@ input:focus, textarea:focus, select:focus {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.os-box:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
 }
 
 /* ================= 2. LOGIN / SIGNUP / DIALOGS ================= */
@@ -288,6 +434,7 @@ input:focus, textarea:focus, select:focus {
     width: 100%;
     text-align: center;
     margin-bottom: 28px;
+    animation: modalPopIn 0.25s ease-out;
 }
 
 .auth-card-screenshot h2 {
@@ -324,7 +471,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .auth-card-screenshot input:focus {
-    outline: 2px solid #ff6600;
+    outline: 2px solid var(--primary);
     background-color: #262626;
 }
 
@@ -377,7 +524,7 @@ input:focus, textarea:focus, select:focus {
 
 .dialog-change-btn {
     width: 100%;
-    background-color: #ff6600;
+    background-color: var(--primary);
     color: #ffffff;
     border: none;
     border-radius: 999px;
@@ -389,7 +536,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .dialog-change-btn:hover {
-    background-color: #e65c00;
+    background-color: var(--primary-hover);
 }
 
 .auth-bottom-buttons {
@@ -466,11 +613,6 @@ input:focus, textarea:focus, select:focus {
     line-height: 1.45;
 }
 
-@keyframes hubpipePulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.04); opacity: 0.85; }
-}
-
 /* ================= 4. HUB, CHAT & DISCOVER WORKSPACE ================= */
 #chat-screen {
     display: none;
@@ -485,6 +627,30 @@ input:focus, textarea:focus, select:focus {
     display: flex;
 }
 
+.mobile-menu-btn {
+    display: none;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 16px;
+    position: absolute;
+    left: 16px;
+}
+
+.mobile-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 40;
+}
+
+.mobile-backdrop.active {
+    display: block;
+}
+
 /* Left Sidebar */
 .left-sidebar {
     width: 310px;
@@ -494,11 +660,10 @@ input:focus, textarea:focus, select:focus {
     position: relative;
     padding: 16px 14px 12px 14px;
     flex-shrink: 0;
-    transition: width 0.2s ease;
+    transition: width 0.22s cubic-bezier(0.22, 1, 0.36, 1), transform 0.24s ease, background-color 0.25s ease;
     z-index: 15;
 }
 
-/* Minimized Sidebar Icon Rail */
 .left-sidebar.collapsed {
     width: 90px;
     padding: 16px 8px;
@@ -519,7 +684,7 @@ input:focus, textarea:focus, select:focus {
 .left-sidebar.collapsed .get-started-label,
 .left-sidebar.collapsed .get-started-row,
 .left-sidebar.collapsed .user-meta,
-.left-sidebar.collapsed .gear-icon,
+.left-sidebar.collapsed .gear-icon-btn,
 .left-sidebar.collapsed #sidebar-groups-empty {
     display: none !important;
 }
@@ -586,6 +751,11 @@ input:focus, textarea:focus, select:focus {
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.orange-circle-icon:hover {
+    transform: scale(1.06);
 }
 
 .orange-circle-icon img {
@@ -621,6 +791,7 @@ input:focus, textarea:focus, select:focus {
 
 .home-circle-btn:hover {
     background-color: #262626;
+    transform: translateY(-1px);
 }
 
 .sidebar-divider {
@@ -655,6 +826,14 @@ input:focus, textarea:focus, select:focus {
     font-size: 13px;
     font-weight: 600;
     color: #ffffff;
+    padding: 4px 6px;
+    border-radius: 10px;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.top-friend-chip:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
 }
 
 .top-friend-chip img {
@@ -705,7 +884,7 @@ input:focus, textarea:focus, select:focus {
 .groups-card-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .group-card-row {
@@ -715,10 +894,12 @@ input:focus, textarea:focus, select:focus {
     padding: 8px 10px;
     border-radius: 12px;
     cursor: pointer;
+    transition: background-color 0.16s ease, transform 0.14s ease;
 }
 
 .group-card-row:hover, .group-card-row.active {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.09);
+    transform: translateX(2px);
 }
 
 .group-thumb {
@@ -733,6 +914,7 @@ input:focus, textarea:focus, select:focus {
 .group-card-info {
     flex: 1;
     text-align: center;
+    overflow: hidden;
 }
 
 .group-card-title {
@@ -740,13 +922,18 @@ input:focus, textarea:focus, select:focus {
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .group-card-desc {
     font-size: 12px;
     color: #cccccc;
     line-height: 1.3;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Collapse Tab */
@@ -765,6 +952,7 @@ input:focus, textarea:focus, select:focus {
     align-items: center;
     padding: 0;
     z-index: 20;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Bottom Dock */
@@ -799,6 +987,7 @@ input:focus, textarea:focus, select:focus {
 
 .green-action-btn:hover, .green-action-btn.active-discover {
     background-color: #333333;
+    transform: translateY(-1px);
 }
 
 .user-profile-pill-card {
@@ -809,6 +998,7 @@ input:focus, textarea:focus, select:focus {
     align-items: center;
     gap: 12px;
     cursor: pointer;
+    transition: background-color 0.16s ease, transform 0.14s ease;
 }
 
 .user-profile-pill-card:hover {
@@ -839,9 +1029,23 @@ input:focus, textarea:focus, select:focus {
     color: #aaaaaa;
 }
 
+.gear-icon-btn {
+    background: transparent;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .gear-icon {
     font-size: 22px;
     color: #cccccc;
+    transition: transform 0.25s ease;
+}
+
+.user-profile-pill-card:hover .gear-icon,
+.user-profile-pill-card:hover .ui-icon-img {
+    transform: rotate(45deg);
 }
 
 /* Center Pane */
@@ -854,20 +1058,25 @@ input:focus, textarea:focus, select:focus {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 0;
     position: relative;
+    transition: background-color 0.25s ease;
 }
 
 .pane-view {
     display: none;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
 }
 
 .pane-view.active {
     display: flex;
+    animation: fadeSlideUp 0.2s ease-out;
 }
 
 .hub-top-bar {
+    flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -880,7 +1089,7 @@ input:focus, textarea:focus, select:focus {
     align-items: center;
     gap: 8px;
     width: 100%;
-    max-width: 340px;
+    max-width: 360px;
 }
 
 .hub-search-wrapper input {
@@ -893,17 +1102,6 @@ input:focus, textarea:focus, select:focus {
     text-align: center;
     margin-bottom: 0;
     backdrop-filter: blur(6px);
-}
-
-.top-bar-icon {
-    font-size: 20px;
-    color: #ffffff;
-}
-
-#hub-people-icon {
-    position: absolute;
-    right: 18px;
-    font-size: 24px;
 }
 
 .hub-content-scroll {
@@ -950,12 +1148,13 @@ input:focus, textarea:focus, select:focus {
 
 .add-friend-wide-pill:hover {
     background-color: rgba(34, 34, 34, 0.95);
+    transform: translateY(-1px);
 }
 
 .hub-friends-stack {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     margin-top: 10px;
 }
 
@@ -964,12 +1163,14 @@ input:focus, textarea:focus, select:focus {
     align-items: center;
     gap: 14px;
     cursor: pointer;
-    padding: 6px 10px;
+    padding: 8px 12px;
     border-radius: 12px;
+    transition: background-color 0.16s ease, transform 0.14s ease;
 }
 
 .friend-list-row:hover {
     background-color: rgba(255, 255, 255, 0.08);
+    transform: translateX(3px);
 }
 
 .friend-list-row img {
@@ -986,21 +1187,27 @@ input:focus, textarea:focus, select:focus {
     color: #ffffff;
 }
 
-/* Group Chat Banner & Messages */
+/* Active Chat View: Compact Banner + Channels/Calls + Scrollable Log + Slim Input Bar */
+#active-chat-container {
+    min-height: 0;
+    overflow: hidden;
+}
+
 .chat-banner-area {
-    text-align: center;
-    padding: 20px 20px 14px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    background-color: rgba(18, 18, 18, 0.55);
-    backdrop-filter: blur(6px);
     flex-shrink: 0;
+    text-align: center;
     padding: 12px 20px 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: rgba(18, 18, 18, 0.65);
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(8px);
 }
 
 .chat-banner-thumb {
     width: 48px;
     height: 48px;
-    border-radius: 16px;
+    border-radius: 12px;
     object-fit: cover;
     background-color: #262626;
     margin-bottom: 4px;
@@ -1010,65 +1217,141 @@ input:focus, textarea:focus, select:focus {
     font-size: 20px;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 4px;
-    
+    margin-bottom: 2px;
 }
 
 .chat-banner-desc {
-    font-size: 14px;
+    font-size: 13px;
     color: #cccccc;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .chat-banner-date {
-    font-size: 12px;
+    font-size: 11px;
     color: #999999;
+}
+
+.chat-action-toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.toolbar-chip-btn {
+    background-color: rgba(30, 30, 30, 0.9);
+    color: #ffffff;
+    border: 1px solid #3a3a3a;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+}
+
+.toolbar-chip-btn:hover {
+    border-color: var(--primary);
+}
+
+.channels-strip {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.channel-pill {
+    background-color: #202020;
+    color: #dddddd;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.channel-pill.active {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.call-session-bar {
+    flex-shrink: 0;
+    background-color: #163324;
+    border-bottom: 1px solid var(--success);
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
 }
 
 .messages-log {
     flex: 1;
-    padding: 16px 24px;
+    min-height: 0;
+    padding: 16px 28px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    min-height: 0;
+    gap: 14px;
 }
 
 .message-item-row {
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    background-color: rgba(18, 18, 18, 0.45);
-    padding: 8px 12px;
+    background-color: rgba(18, 18, 18, 0.55);
+    padding: 10px 14px;
     border-radius: 12px;
+    animation: messageIn 0.2s ease-out;
+    transition: background-color 0.15s ease;
 }
 
-.message-item-row img {
-    width: 44px;
-    height: 44px;
+.message-item-row:hover {
+    background-color: rgba(18, 18, 18, 0.72);
+}
+
+.message-item-row.pinned-message {
+    border-left: 3px solid var(--primary);
+}
+
+.message-item-row img:not(.msg-gif):not(.msg-image-attachment) {
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
     background-color: #262626;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .msg-content-block {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
 }
 
 .msg-author-time {
     display: flex;
     gap: 10px;
     align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .msg-name {
     font-size: 14px;
     font-weight: 700;
     color: #ffffff;
+    cursor: pointer;
+}
+
+.msg-name:hover {
+    text-decoration: underline;
 }
 
 .msg-timestamp {
@@ -1080,112 +1363,195 @@ input:focus, textarea:focus, select:focus {
     font-size: 14px;
     color: #dddddd;
     line-height: 1.4;
+    word-break: break-word;
 }
 
-.msg-gif {
-    max-width: 220px;
-    border-radius: 10px;
-    margin-top: 6px;
-    display: block;
-}
-
-.media-picker {
-    background-color: #141414;
-    border-top: 1px solid #333333;
-    padding: 12px 24px;
-}
-
-.picker-grid {
+.msg-reactions-row {
     display: flex;
-    gap: 10px;
+    gap: 6px;
+    margin-top: 4px;
     flex-wrap: wrap;
 }
 
-.picker-item {
-    background-color: #222222;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
+.reaction-chip {
+    background-color: #242424;
+    border: 1px solid #383838;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 12px;
 }
 
-.chat-input-area {
+.msg-gif,
+.msg-image-attachment {
+    max-width: 260px;
+    max-height: 240px;
+    border-radius: 12px;
+    margin-top: 6px;
+    display: block;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.16s ease;
+}
+
+.msg-gif:hover,
+.msg-image-attachment:hover {
+    transform: scale(1.02);
+}
+
+.msg-file-card {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #222222;
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 13px;
+    max-width: 340px;
+    cursor: pointer;
+}
+
+.msg-file-card:hover {
+    border-color: var(--primary);
+}
+
+/* Categorized Emoji & GIF Picker */
+.media-picker {
     flex-shrink: 0;
-    height: 64px;
-    padding: 10px 18px;
-    background-color: #121212;
-    border-top: 1px solid #2c2c2c;
+    background-color: #141414;
+    border-top: 1px solid #333333;
+    padding: 12px 20px;
+    max-height: 260px;
+    overflow-y: auto;
+    animation: fadeSlideUp 0.18s ease-out;
+}
+
+.picker-tabs-row {
     display: flex;
     gap: 8px;
-    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
-.chat-input-area input[type="text"] {
-    flex: 1;
-    min-width: 0;
-    height: 42px;
-    background-color: #000000;
-    border: none;
+.emoji-cat-btn {
+    background-color: #222222;
+    color: #cccccc;
+    padding: 6px 12px;
     border-radius: 999px;
-    padding: 0 18px;
-    color: #ffffff;
-    font-size: 14px;
-    margin-bottom: 0;
+    font-size: 12px;
 }
 
-.pill-send-btn {
+.emoji-cat-btn.active {
     background: var(--primary);
     color: #ffffff;
-    border: none;
-    border-radius: 999px;
-    padding: 12px 20px;
-    font-size: 13px;
-    font-weight: 600;
+}
+
+.picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+    gap: 6px;
+}
+
+.picker-item {
+    background-color: #202020;
+    padding: 8px;
+    border-radius: 8px;
     cursor: pointer;
-}
-
-.pill-send-btn:hover {
-    opacity: 0.92;
-}
-
-/* Keep active chat view locked to viewport height */
-#active-chat-container {
-    min-height: 0;
-    overflow: hidden;
-}
-
-/* Keep the top group banner compact and non-shrinking */
-.chat-banner-area {
-    flex-shrink: 0;
-    padding: 12px 20px 10px 20px;
-}
-
-.chat-banner-thumb {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 4px;
-}
-
-.chat-banner-title {
     font-size: 20px;
+    text-align: center;
+    transition: transform 0.12s ease, background-color 0.15s ease;
 }
 
-/* Force all scrolling to happen strictly inside the message log */
-.messages-log {
-    flex: 1;
-    min-height: 0;
-    padding: 16px 24px;
-    overflow-y: auto;
+.picker-item:hover {
+    background-color: #2e2e2e;
+    transform: scale(1.15);
+}
+
+.gif-search-bar {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
-/* Lock the bottom text box bar to a slim, compact height */
+.gif-search-bar input {
+    flex: 1;
+    min-width: 180px;
+    margin-bottom: 0;
+    padding: 8px 14px;
+}
+
+.gif-search-btn {
+    padding: 9px 16px;
+    font-size: 13px;
+}
+
+.gif-source-pills {
+    display: flex;
+    gap: 6px;
+}
+
+.gif-source-btn {
+    background-color: #222222;
+    color: #cccccc;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.gif-source-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.gif-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+}
+
+.gif-card-option {
+    background-color: #1e1e1e;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.gif-card-option:hover {
+    transform: scale(1.03);
+    border-color: var(--primary);
+}
+
+.gif-card-option img {
+    width: 100%;
+    height: 86px;
+    object-fit: cover;
+    display: block;
+}
+
+.gif-source-badge {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    background-color: rgba(0, 0, 0, 0.78);
+    color: #ffffff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+/* Slim Bottom Chat Input Bar */
 .chat-input-area {
     flex-shrink: 0;
-    height: 64px;
-    padding: 10px 18px;
+    height: 62px;
+    padding: 9px 18px;
     background-color: #121212;
     border-top: 1px solid #2c2c2c;
     display: flex;
@@ -1206,19 +1572,33 @@ input:focus, textarea:focus, select:focus {
     margin-bottom: 0;
 }
 
-.pill-send-btn,
-.pill-utility-btn {
+.icon-action-btn {
     flex-shrink: 0;
+    width: 40px;
     height: 40px;
-    padding: 0 16px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #1c1c1c;
+    border: 1px solid #333333;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap;
 }
 
-.pill-utility-btn:hover {
-    background-color: #222222;
+.icon-action-btn:hover {
+    background-color: #292929;
+    transform: translateY(-1px);
+}
+
+.icon-action-btn.send-btn {
+    background: var(--primary);
+    border-color: transparent;
+}
+
+.icon-action-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 /* Discover View */
@@ -1235,6 +1615,8 @@ input:focus, textarea:focus, select:focus {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 18px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .discover-main-title {
@@ -1285,10 +1667,12 @@ input:focus, textarea:focus, select:focus {
     gap: 14px;
     cursor: pointer;
     text-align: left;
+    transition: transform 0.16s ease, background-color 0.16s ease;
 }
 
 .discover-preview-card:hover {
     background-color: #222222;
+    transform: translateY(-2px);
 }
 
 .discover-card-thumb {
@@ -1329,6 +1713,7 @@ input:focus, textarea:focus, select:focus {
     flex-direction: column;
     flex-shrink: 0;
     z-index: 15;
+    transition: transform 0.24s ease, background-color 0.25s ease;
 }
 
 .right-friends-header h3 {
@@ -1352,9 +1737,10 @@ input:focus, textarea:focus, select:focus {
     font-size: 13px;
     color: #ffffff;
     font-weight: 600;
+    cursor: pointer;
 }
 
-.member-item-row img {
+.member-item-row img:not(.member-crown-icon) {
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -1362,16 +1748,17 @@ input:focus, textarea:focus, select:focus {
     background-color: #222222;
 }
 
-/* ================= 5. CONTEXT MENUS & MODALS ================= */
+/* ================= 5. CONTEXT MENUS, PROFILES, PINS, SETTINGS & MODALS ================= */
 .context-menu-box {
     position: fixed;
     background-color: #181818;
     border: 1px solid #333333;
     border-radius: 12px;
     padding: 6px;
-    width: 210px;
-    z-index: 1000;
+    width: 215px;
+    z-index: 1500;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+    animation: contextMenuPop 0.14s ease-out;
 }
 
 .context-item {
@@ -1380,6 +1767,7 @@ input:focus, textarea:focus, select:focus {
     color: #ffffff;
     cursor: pointer;
     border-radius: 8px;
+    transition: background-color 0.14s ease;
 }
 
 .context-item:hover {
@@ -1405,23 +1793,6 @@ input:focus, textarea:focus, select:focus {
     cursor: pointer;
 }
 
-.requests-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.request-row-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1c1c1c;
-    padding: 10px;
-    border-radius: 10px;
-}
-
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1430,6 +1801,7 @@ input:focus, textarea:focus, select:focus {
     justify-content: center;
     align-items: center;
     z-index: 100;
+    backdrop-filter: blur(3px);
 }
 
 .modal-box {
@@ -1438,9 +1810,119 @@ input:focus, textarea:focus, select:focus {
     border-radius: 20px;
     padding: 26px;
     width: 90%;
-    max-width: 400px;
+    max-width: 420px;
     max-height: 90vh;
     overflow-y: auto;
+    animation: modalPopIn 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-view-banner {
+    height: 104px;
+    width: 100%;
+    background-color: var(--primary);
+    background-size: cover;
+    background-position: center;
+}
+
+.profile-view-avatar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: -36px;
+    margin-bottom: 10px;
+}
+
+.profile-view-avatar-row img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 3px solid #141414;
+    object-fit: cover;
+    background-color: #222222;
+}
+
+.pinned-list-box {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.pinned-item-card {
+    background-color: #1c1c1c;
+    border-left: 3px solid var(--primary);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+}
+
+.accounts-stack-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.saved-account-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1c1c1c;
+    border: 1px solid #2e2e2e;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.settings-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.mode-switch-pill {
+    background-color: #242424;
+    color: #ffffff;
+    border: 1px solid #3a3a3a;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+}
+
+.settings-category-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.settings-cat-btn {
+    background-color: #202020;
+    color: #bbbbbb;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.settings-cat-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.settings-cat-panel {
+    display: none;
+    animation: fadeSlideUp 0.16s ease-out;
+}
+
+.settings-cat-panel.active {
+    display: block;
 }
 
 .modal-tabs {
@@ -1472,8 +1954,9 @@ input:focus, textarea:focus, select:focus {
 .profile-preview-row {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .profile-preview-row img {
@@ -1483,19 +1966,12 @@ input:focus, textarea:focus, select:focus {
     object-fit: cover;
 }
 
-.modal-divider {
-    border: none;
-    border-top: 1px solid #333333;
-    margin: 16px 0;
-}
-
 .danger-zone {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* Custom Theme & Swatches */
 .theme-settings-section {
     text-align: left;
 }
@@ -1594,9 +2070,16 @@ input:focus, textarea:focus, select:focus {
 :root[data-theme="light"] .create-group-pill-btn,
 :root[data-theme="light"] .hub-search-wrapper input,
 :root[data-theme="light"] .chat-input-area input[type="text"],
-:root[data-theme="light"] .pill-utility-btn {
+:root[data-theme="light"] .icon-action-btn:not(.send-btn),
+:root[data-theme="light"] .mode-switch-pill,
+:root[data-theme="light"] .settings-cat-btn {
     background-color: #e5e7eb;
     color: #111827;
+}
+
+:root[data-theme="light"] .settings-cat-btn.active {
+    background: var(--primary);
+    color: #ffffff;
 }
 
 :root[data-theme="light"] .green-action-btn,
@@ -1614,7 +2097,8 @@ input:focus, textarea:focus, select:focus {
 
 :root[data-theme="light"] .chat-input-area,
 :root[data-theme="light"] .discover-card-container-box,
-:root[data-theme="light"] .modal-box {
+:root[data-theme="light"] .modal-box,
+:root[data-theme="light"] .media-picker {
     background-color: #ffffff;
     border-color: #d1d5db;
 }
@@ -1633,4 +2117,63 @@ input:focus, textarea:focus, select:focus {
 :root[data-theme="light"] .sidebar-divider,
 :root[data-theme="light"] .hub-line {
     background-color: #d1d5db;
+}
+
+/* ================= MOBILE SUPPORT ================= */
+@media (max-width: 820px) {
+    .mobile-menu-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-collapse-tab {
+        display: none;
+    }
+
+    .left-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        z-index: 50;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+    }
+
+    .left-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .right-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        transform: translateX(100%);
+        z-index: 50;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.6);
+    }
+
+    .right-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .messages-log {
+        padding: 12px 14px;
+    }
+
+    .chat-input-area {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .icon-action-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .custom-color-grid {
+        grid-template-columns: 1fr;
+    }
 }
