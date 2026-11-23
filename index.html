@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HubPipe</title>
+    <title>HubPipe — Your Message, Your Privacy</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
 </head>
@@ -19,7 +19,7 @@
             <nav class="nav-links">
                 <button class="nav-btn" onclick="showLandingTab('report')">Report</button>
                 <button class="nav-btn" onclick="showLandingTab('downloads')">Downloads</button>
-                <button class="nav-btn" onclick="openAuthScreen('login')">Open in Browser</button>
+                <button class="nav-btn" onclick="handleOpenInBrowser()">Open in Browser</button>
                 <button class="primary-btn" onclick="showLandingTab('downloads')">Download Now</button>
             </nav>
         </header>
@@ -28,7 +28,7 @@
         <main id="tab-home" class="landing-content active">
             <div class="hero-container">
                 <div class="hero-illustration">
-                    <img src="Assets/Images/devices.png" alt="HubPipe Devices" onerror="this.style.display='none';">
+                    <img src="Assets/Images/device.png" alt="HubPipe Devices" onerror="this.style.display='none';">
                 </div>
                 <div class="hero-card">
                     <h1>HubPipe, Your Message, Your Privacy</h1>
@@ -36,12 +36,9 @@
                     <div class="divider-line"></div>
                     <div class="hero-actions">
                         <button class="primary-btn" onclick="showLandingTab('downloads')">Downloads</button>
-                        <button class="secondary-btn" onclick="openAuthScreen('login')">Open in Browser</button>
+                        <button class="secondary-btn" onclick="handleOpenInBrowser()">Open in Browser</button>
                     </div>
                     <div class="divider-line"></div>
-                    <h1>HubPipe is under development!</h1>
-                    <p>HubPipe is still under development, so you may encounter bugs or features that aren't fully working yet. Since our built-in report system is still in progress, please report any issues on the <a href="https://github.com/fayadgamer13/hubpipe-beta.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub HubPipe Repo</a>.</p>
-
                 </div>
             </div>
         </main>
@@ -70,7 +67,7 @@
 
             <!-- Expanded OS Selector Section -->
             <div id="os-grid-section" style="max-width: 800px; width: 100%; margin: 40px auto; padding: 20px;">
-                <h3 style="color: var(--primary); margin-bottom: 16px; text-align: center;">All Available Operating Systems(Under development)</h3>
+                <h3 style="color: var(--primary); margin-bottom: 16px; text-align: center;">All Available Operating Systems</h3>
                 <div class="os-grid">
                     <div class="os-box">
                         <h3>Windows</h3>
@@ -111,13 +108,13 @@
                         If you find an bug or getting an cyberbullied HubPipe<br>you can report here!
                     </p>
                     <div class="hero-actions">
-                        <button class="primary-btn" style="padding: 12px 48px;" onclick="toggleReportForm()">Report!</button>
+                        <button class="primary-btn" style="padding: 12px 48px;" onclick="openReportForm()">Report!</button>
                     </div>
                 </div>
             </div>
 
             <div id="report-form-section" style="display: none; max-width: 560px; width: 100%; margin: 28px auto; background-color: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; text-align: left;">
-                <h3 style="color: var(--primary); margin-bottom: 14px;">Submit Your Report</h3>
+                <h3 style="color: var(--primary); margin-bottom: 14px;">Submit Your Report (wadifayad@gmail.com)</h3>
                 <form class="simple-form" onsubmit="handleReportSubmit(event)">
                     <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Issue Type</label>
                     <select id="report-type" required>
@@ -288,7 +285,7 @@
                         <div id="footer-tag">#4321 <span id="footer-status-badge" class="status-pill-tag">• Online</span></div>
                     </div>
                     <button type="button" class="gear-icon-btn" onclick="event.stopPropagation(); openProfileModal();" title="Settings">
-                        <img src="Assets/Images/Icons/settings.png" alt="Settings" class="ui-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <img src="Assets/Images/Icons/settings.png" alt="Settings" class="settings-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                         <span class="gear-icon" style="display:none;">⚙️</span>
                     </button>
                 </div>
@@ -323,6 +320,8 @@
                         Add Friend +
                     </button>
 
+                    <div id="incoming-friend-requests-area" class="incoming-requests-box" style="display: none;"></div>
+
                     <div class="hub-line"></div>
 
                     <h2 class="hub-sub-heading">Friends</h2>
@@ -342,28 +341,32 @@
                     <p class="chat-banner-desc" id="current-room-desc">Hello this is a group chat Description!</p>
                     <div class="chat-banner-date" id="current-room-date">Nov 19 2026</div>
 
-                    <!-- Call, Video Call, Screen Stream & Server Channel/Voice Controls -->
-                    <div class="chat-action-toolbar">
+                    <!-- Call, Video Call, Screen Stream & Group Channel/Voice/Edit Controls -->
+                    <div class="chat-action-toolbar" id="chat-action-toolbar">
                         <button type="button" class="toolbar-chip-btn" onclick="startCallSession('Voice Call')">📞 Call</button>
                         <button type="button" class="toolbar-chip-btn" onclick="startCallSession('Video Call')">🎥 Video Call</button>
                         <button type="button" class="toolbar-chip-btn" onclick="startCallSession('Screen Stream')">🖥️ Stream Screen</button>
-                        <button type="button" id="add-channel-btn" class="toolbar-chip-btn" onclick="addGroupChannel()"># Add Channel</button>
-                        <button type="button" id="add-voice-btn" class="toolbar-chip-btn" onclick="addGroupVoiceChannel()">🔊 Add Voice</button>
+                        <button type="button" id="add-channel-btn" class="toolbar-chip-btn" style="display: none;" onclick="addGroupChannel()"># Add Channel</button>
+                        <button type="button" id="add-voice-btn" class="toolbar-chip-btn" style="display: none;" onclick="addGroupVoiceChannel()">🔊 Add Voice</button>
+                        <button type="button" id="edit-server-btn" class="toolbar-chip-btn" style="display: none;" onclick="openServerEditorModal()">✏️ Edit Server</button>
                     </div>
 
                     <!-- Channels & Voice Strip for Group Chats -->
                     <div id="group-channels-strip" class="channels-strip" style="display: none;"></div>
                 </div>
 
-                <!-- Active Call / Video / Screen Stream Banner -->
+                <!-- Active Call / Video / Screen Stream Stage -->
                 <div id="active-call-banner" class="call-session-bar" style="display: none;">
-                    <span id="active-call-label">📞 Voice Call active</span>
-                    <button type="button" class="danger-btn" style="padding: 5px 12px; font-size: 12px;" onclick="endCallSession()">End</button>
+                    <div class="call-stage-header">
+                        <span id="active-call-label">📞 Voice Call active</span>
+                        <button type="button" class="danger-btn" style="padding: 5px 12px; font-size: 12px;" onclick="endCallSession()">End</button>
+                    </div>
+                    <video id="call-local-video" class="call-video-preview" autoplay muted playsinline style="display: none;"></video>
                 </div>
 
                 <div id="messages-log" class="messages-log"></div>
 
-                <!-- Categorized Emoji & Tenor/Giphy GIF Picker -->
+                <!-- Categorized Emoji & GIF Picker -->
                 <div id="media-picker" class="media-picker" style="display: none;">
                     <div id="emoji-picker-panel" style="display: none;">
                         <div class="picker-tabs-row" id="emoji-category-tabs"></div>
@@ -372,12 +375,12 @@
 
                     <div id="gif-picker-panel" style="display: none;">
                         <div class="gif-search-bar">
-                            <input type="text" id="gif-search-input" placeholder="Search Tenor & Giphy GIFs..." onkeydown="if(event.key==='Enter'){event.preventDefault(); searchGifs();}">
+                            <input type="text" id="gif-search-input" placeholder="Search GIFs..." onkeydown="if(event.key==='Enter'){event.preventDefault(); searchGifs();}">
                             <button type="button" class="primary-btn gif-search-btn" onclick="searchGifs()">Search</button>
                             <div class="gif-source-pills">
                                 <button type="button" class="gif-source-btn active" data-source="all" onclick="setGifSource('all', this)">All</button>
-                                <button type="button" class="gif-source-btn" data-source="tenor" onclick="setGifSource('tenor', this)">Tenor</button>
                                 <button type="button" class="gif-source-btn" data-source="giphy" onclick="setGifSource('giphy', this)">Giphy</button>
+                                <button type="button" class="gif-source-btn" data-source="tenor" onclick="setGifSource('tenor', this)">Tenor</button>
                             </div>
                         </div>
                         <div id="gif-picker-grid" class="gif-picker-grid"></div>
@@ -395,7 +398,7 @@
                         <img src="Assets/Images/Icons/emoji.png" alt="Emoji" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                         <span style="display:none;">Emoji</span>
                     </button>
-                    <button type="button" class="icon-action-btn" onclick="togglePicker('gif')" title="GIFs (Tenor & Giphy)">
+                    <button type="button" class="icon-action-btn" onclick="togglePicker('gif')" title="GIFs">
                         <img src="Assets/Images/Icons/gif.png" alt="GIF" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                         <span style="display:none;">GIF</span>
                     </button>
@@ -454,6 +457,41 @@
         </div>
     </div>
 
+    <!-- File / Image / GIF / PDF / Code Preview Modal -->
+    <div id="file-preview-modal" class="modal-overlay" style="display: none; z-index: 1600;">
+        <div class="modal-box" style="max-width: 560px;">
+            <h3 id="preview-modal-title">Attachment Preview</h3>
+            <div id="preview-modal-body" class="preview-body-box"></div>
+            <div class="modal-actions" id="preview-modal-actions" style="margin-top: 16px;">
+                <button type="button" class="secondary-btn" onclick="closeFilePreviewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Server Editor Modal (Description, Icon & Channels Rename/Delete) -->
+    <div id="server-editor-modal" class="modal-overlay" style="display: none; z-index: 1550;">
+        <div class="modal-box" style="max-width: 460px;">
+            <h3>Edit Server</h3>
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Server Name</label>
+            <input type="text" id="edit-server-name-input" placeholder="Server Name">
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Server Description</label>
+            <textarea id="edit-server-desc-input" rows="2" placeholder="Server Description"></textarea>
+
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Server Icon Image / GIF</label>
+            <input type="file" id="edit-server-icon-input" accept="image/*,.gif" onchange="handleServerEditIconUpload(event)">
+
+            <hr class="modal-divider">
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Channels & Voice</label>
+            <div id="edit-server-channels-list" class="channel-manage-list"></div>
+
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button type="button" class="primary-btn" onclick="saveServerEdits()">Save Server</button>
+                <button type="button" class="secondary-btn" onclick="closeServerEditorModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Pinned Messages Modal -->
     <div id="pinned-messages-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="max-width: 440px;">
@@ -478,8 +516,9 @@
                 <p id="view-user-bio" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"></p>
                 <div id="view-user-since" style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;"></div>
                 <div class="modal-actions">
-                    <button type="button" class="secondary-btn" onclick="startCallSession('Voice Call'); closeUserProfileModal();">📞 Call</button>
-                    <button type="button" class="primary-btn" onclick="closeUserProfileModal()">Close</button>
+                    <button type="button" class="primary-btn" id="view-user-add-friend-btn" onclick="addFriendFromProfile()">Add Friend</button>
+                    <button type="button" class="danger-btn" id="view-user-report-btn" onclick="reportUserFromProfile()">Report</button>
+                    <button type="button" class="secondary-btn" onclick="closeUserProfileModal()">Close</button>
                 </div>
             </div>
         </div>
@@ -549,17 +588,17 @@
         <div class="context-item" onclick="executeServerContextAction('add-voice')">🔊 Add Voice Channel</div>
         <div class="context-item" onclick="executeServerContextAction('mark-read')">Mark as Read</div>
         <div class="context-item" onclick="executeServerContextAction('mute')">Mute Server</div>
-        <div class="context-item" onclick="executeServerContextAction('edit')">Edit Group Info</div>
+        <div class="context-item" onclick="executeServerContextAction('edit')">Edit Server Info</div>
         <div class="context-item danger" onclick="executeServerContextAction('leave')">Leave Server</div>
     </div>
 
     <!-- Message / File Attachment Context Menu (Right-Click) -->
     <div id="message-context-menu" class="context-menu-box" style="display: none;">
-        <div class="context-item" onclick="executeMessageContextAction('open')">Open / Download File</div>
+        <div class="context-item" onclick="executeMessageContextAction('open')">Preview / Download File</div>
         <div class="context-item" onclick="executeMessageContextAction('copy')">Copy Message</div>
         <div class="context-item" onclick="executeMessageContextAction('react')">React with 👍</div>
         <div class="context-item" onclick="executeMessageContextAction('pin')">Pin Message</div>
-        <div class="context-item danger" onclick="executeMessageContextAction('delete')">Delete Message</div>
+        <div class="context-item danger" id="ctx-delete-message-btn" onclick="executeMessageContextAction('delete')">Delete Message</div>
     </div>
 
     <!-- Friend Request Prompt Modal (Accept / Decline) -->
@@ -639,8 +678,8 @@
                 <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Saved Accounts (<span id="saved-accounts-count">0</span>/10)</label>
                 <div id="saved-accounts-list" class="accounts-stack-box"></div>
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <input type="text" id="new-account-username" placeholder="Add account username..." style="margin-bottom: 0;">
-                    <button type="button" class="secondary-btn" onclick="addSavedAccount()">+ Add Account</button>
+                    <input type="text" id="new-account-username" placeholder="Add second/extra account username..." style="margin-bottom: 0;">
+                    <button type="button" id="add-account-btn" class="secondary-btn" onclick="addSavedAccount()">+ Add Account</button>
                 </div>
             </div>
 
@@ -652,9 +691,9 @@
                     <button type="button" class="theme-swatch" style="background-color: #ffffff; border-color: #888888;" onclick="applyThemePreset('#ff6600', '#ffffff', '#f3f4f6', 'light')" title="HubPipe Light Mode"></button>
                     <button type="button" class="theme-swatch" style="background-color: #00b85c;" onclick="applyThemePreset('#00b85c', '#050f0a', '#122119', 'dark')" title="Emerald Green"></button>
                     <button type="button" class="theme-swatch" style="background-color: #3b82f6;" onclick="applyThemePreset('#3b82f6', '#060b14', '#111827', 'dark')" title="Cyber Blue"></button>
-                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #ff6600, #ff0055);" onclick="applyGradientTheme('linear-gradient(135deg, #ff6600, #ff0055)', '#000000', '#1c1c1c')" title="Sunset Gradient"></button>
-                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #00b85c, #00d2ff);" onclick="applyGradientTheme('linear-gradient(135deg, #00b85c, #00d2ff)', '#020b08', '#0f1f18')" title="Aurora Gradient"></button>
-                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #a855f7, #ec4899);" onclick="applyGradientTheme('linear-gradient(135deg, #a855f7, #ec4899)', '#0d0614', '#1b1126')" title="Cyberpunk Gradient"></button>
+                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #ff6600, #ff0055);" onclick="applyGradientTheme('linear-gradient(135deg, #ff6600, #ff0055)', 'linear-gradient(180deg, #1b0a12, #000000)', 'linear-gradient(135deg, #241219, #151515)')" title="Sunset Gradient"></button>
+                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #00b85c, #00d2ff);" onclick="applyGradientTheme('linear-gradient(135deg, #00b85c, #00d2ff)', 'linear-gradient(180deg, #071c18, #000000)', 'linear-gradient(135deg, #0d2420, #141918)')" title="Aurora Gradient"></button>
+                    <button type="button" class="theme-swatch" style="background: linear-gradient(135deg, #a855f7, #ec4899);" onclick="applyGradientTheme('linear-gradient(135deg, #a855f7, #ec4899)', 'linear-gradient(180deg, #1a0b26, #000000)', 'linear-gradient(135deg, #22112e, #16121a)')" title="Cyberpunk Gradient"></button>
                 </div>
 
                 <div class="custom-color-grid">
@@ -753,17 +792,23 @@
                 <input type="text" id="keybind-sidebar-input" value="Ctrl+B">
                 <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Open Settings Keybind</label>
                 <input type="text" id="keybind-settings-input" value="Ctrl+,">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Go to Hub Home Keybind</label>
+                <input type="text" id="keybind-hub-input" value="Ctrl+H">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">Toggle Discover Keybind</label>
+                <input type="text" id="keybind-discover-input" value="Ctrl+D">
             </div>
 
             <!-- Category 8: Language -->
             <div id="settings-cat-language" class="settings-cat-panel">
                 <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:6px;">App Language</label>
-                <select id="app-language-select">
+                <select id="app-language-select" onchange="applyLanguageSelection(this.value)">
                     <option value="en">English</option>
                     <option value="es">Español</option>
                     <option value="fr">Français</option>
                     <option value="de">Deutsch</option>
+                    <option value="pt">Português</option>
                     <option value="ja">日本語</option>
+                    <option value="ar">العربية</option>
                 </select>
             </div>
 
@@ -785,4 +830,4 @@
 
     <script type="module" src="script.js"></script>
 </body>
-</html>
+</html> 

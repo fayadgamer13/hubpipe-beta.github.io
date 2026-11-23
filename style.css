@@ -178,10 +178,17 @@ input:focus, textarea:focus, select:focus {
 
 /* Custom Icon Assets */
 .ui-icon-img {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
     transition: transform 0.16s ease;
+}
+
+.settings-icon-img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    transition: transform 0.25s ease;
 }
 
 .top-bar-icon-img {
@@ -767,7 +774,7 @@ input:focus, textarea:focus, select:focus {
 .sidebar-title-text {
     font-size: 24px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
     line-height: 1.1;
 }
 
@@ -778,8 +785,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .home-circle-btn {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background-color: #181818;
     color: #ffffff;
@@ -796,7 +803,7 @@ input:focus, textarea:focus, select:focus {
 
 .sidebar-divider {
     height: 1px;
-    background-color: #444444;
+    background-color: var(--border);
     width: 100%;
 }
 
@@ -805,7 +812,7 @@ input:focus, textarea:focus, select:focus {
     text-align: center;
     font-size: 15px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
     margin: 10px 0 8px 0;
 }
 
@@ -825,7 +832,7 @@ input:focus, textarea:focus, select:focus {
     position: relative;
     font-size: 13px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-main);
     padding: 4px 6px;
     border-radius: 10px;
     transition: background-color 0.15s ease, transform 0.15s ease;
@@ -877,7 +884,7 @@ input:focus, textarea:focus, select:focus {
     text-align: center;
     font-size: 14px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
     padding: 20px;
 }
 
@@ -920,7 +927,7 @@ input:focus, textarea:focus, select:focus {
 .group-card-title {
     font-size: 14px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
     margin-bottom: 3px;
     white-space: nowrap;
     overflow: hidden;
@@ -929,7 +936,7 @@ input:focus, textarea:focus, select:focus {
 
 .group-card-desc {
     font-size: 12px;
-    color: #cccccc;
+    color: var(--text-muted);
     line-height: 1.3;
     white-space: nowrap;
     overflow: hidden;
@@ -945,7 +952,7 @@ input:focus, textarea:focus, select:focus {
     height: 54px;
     border-radius: 50%;
     background: var(--bg-sidebar);
-    color: #ffffff;
+    color: var(--text-main);
     font-size: 20px;
     display: flex;
     justify-content: center;
@@ -964,7 +971,7 @@ input:focus, textarea:focus, select:focus {
 .get-started-label {
     text-align: center;
     font-size: 13px;
-    color: #777777;
+    color: var(--text-muted);
     margin-bottom: 8px;
 }
 
@@ -979,8 +986,8 @@ input:focus, textarea:focus, select:focus {
     background-color: #1a1a1a;
     color: var(--success);
     border-radius: 10px;
-    padding: 13px 10px;
-    font-size: 15px;
+    padding: 12px 10px;
+    font-size: 14px;
     font-weight: 600;
     text-align: center;
 }
@@ -993,10 +1000,10 @@ input:focus, textarea:focus, select:focus {
 .user-profile-pill-card {
     background-color: #161616;
     border-radius: 14px;
-    padding: 10px 14px;
+    padding: 9px 12px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     cursor: pointer;
     transition: background-color 0.16s ease, transform 0.14s ease;
 }
@@ -1006,8 +1013,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .user-profile-pill-card img {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     background-color: #262626;
@@ -1021,30 +1028,39 @@ input:focus, textarea:focus, select:focus {
 #footer-username {
     font-size: 14px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 #footer-tag {
     font-size: 12px;
-    color: #aaaaaa;
+    color: var(--text-muted);
 }
 
+/* Shrunken Settings Button */
 .gear-icon-btn {
-    background: transparent;
-    padding: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background-color: #242424;
+    padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+}
+
+.gear-icon-btn:hover {
+    background-color: #333333;
 }
 
 .gear-icon {
-    font-size: 22px;
+    font-size: 14px;
     color: #cccccc;
     transition: transform 0.25s ease;
 }
 
-.user-profile-pill-card:hover .gear-icon,
-.user-profile-pill-card:hover .ui-icon-img {
+.gear-icon-btn:hover .gear-icon,
+.gear-icon-btn:hover .settings-icon-img {
     transform: rotate(45deg);
 }
 
@@ -1113,20 +1129,20 @@ input:focus, textarea:focus, select:focus {
 .hub-main-heading {
     font-size: 36px;
     font-weight: 400;
-    color: #ffffff;
+    color: var(--text-main);
     margin-bottom: 12px;
 }
 
 .hub-sub-heading {
     font-size: 34px;
     font-weight: 400;
-    color: #ffffff;
+    color: var(--text-main);
     margin: 14px 0 18px 0;
 }
 
 .hub-line {
     height: 1px;
-    background-color: #555555;
+    background-color: var(--border);
     width: 100%;
     max-width: 380px;
     margin: 12px 0;
@@ -1149,6 +1165,32 @@ input:focus, textarea:focus, select:focus {
 .add-friend-wide-pill:hover {
     background-color: rgba(34, 34, 34, 0.95);
     transform: translateY(-1px);
+}
+
+/* Incoming Friend Request Cards on Hub */
+.incoming-requests-box {
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.incoming-request-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.incoming-request-actions {
+    display: flex;
+    gap: 8px;
 }
 
 .hub-friends-stack {
@@ -1184,10 +1226,10 @@ input:focus, textarea:focus, select:focus {
 .friend-list-row span {
     font-size: 15px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
 }
 
-/* Active Chat View: Compact Banner + Channels/Calls + Scrollable Log + Slim Input Bar */
+/* Active Chat View */
 #active-chat-container {
     min-height: 0;
     overflow: hidden;
@@ -1197,7 +1239,7 @@ input:focus, textarea:focus, select:focus {
     flex-shrink: 0;
     text-align: center;
     padding: 12px 20px 10px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid var(--border);
     background-color: rgba(18, 18, 18, 0.65);
     background-size: cover;
     background-position: center;
@@ -1222,13 +1264,13 @@ input:focus, textarea:focus, select:focus {
 
 .chat-banner-desc {
     font-size: 13px;
-    color: #cccccc;
+    color: #dddddd;
     margin-bottom: 4px;
 }
 
 .chat-banner-date {
     font-size: 11px;
-    color: #999999;
+    color: #bbbbbb;
 }
 
 .chat-action-toolbar {
@@ -1280,13 +1322,29 @@ input:focus, textarea:focus, select:focus {
     flex-shrink: 0;
     background-color: #163324;
     border-bottom: 1px solid var(--success);
-    padding: 8px 20px;
+    padding: 10px 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 8px;
     font-size: 13px;
     font-weight: 600;
     color: #ffffff;
+}
+
+.call-stage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.call-video-preview {
+    width: 100%;
+    max-width: 340px;
+    max-height: 200px;
+    border-radius: 10px;
+    background-color: #000000;
+    object-fit: cover;
 }
 
 .messages-log {
@@ -1356,12 +1414,12 @@ input:focus, textarea:focus, select:focus {
 
 .msg-timestamp {
     font-size: 11px;
-    color: #888888;
+    color: #9ca3af;
 }
 
 .msg-text-body {
     font-size: 14px;
-    color: #dddddd;
+    color: #e5e7eb;
     line-height: 1.4;
     word-break: break-word;
 }
@@ -1379,6 +1437,7 @@ input:focus, textarea:focus, select:focus {
     border-radius: 999px;
     padding: 2px 8px;
     font-size: 12px;
+    cursor: pointer;
 }
 
 .msg-gif,
@@ -1420,8 +1479,8 @@ input:focus, textarea:focus, select:focus {
 /* Categorized Emoji & GIF Picker */
 .media-picker {
     flex-shrink: 0;
-    background-color: #141414;
-    border-top: 1px solid #333333;
+    background-color: var(--bg-panel);
+    border-top: 1px solid var(--border);
     padding: 12px 20px;
     max-height: 260px;
     overflow-y: auto;
@@ -1552,8 +1611,8 @@ input:focus, textarea:focus, select:focus {
     flex-shrink: 0;
     height: 62px;
     padding: 9px 18px;
-    background-color: #121212;
-    border-top: 1px solid #2c2c2c;
+    background-color: var(--bg-panel);
+    border-top: 1px solid var(--border);
     display: flex;
     gap: 8px;
     align-items: center;
@@ -1622,7 +1681,7 @@ input:focus, textarea:focus, select:focus {
 .discover-main-title {
     font-size: 32px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
     letter-spacing: -0.3px;
 }
 
@@ -1642,13 +1701,12 @@ input:focus, textarea:focus, select:focus {
 }
 
 .discover-card-container-box {
-    background-color: rgba(18, 18, 18, 0.85);
-    border: 1px solid #262626;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 24px;
     flex: 1;
     overflow-y: auto;
-    backdrop-filter: blur(6px);
 }
 
 .discover-grid-cards {
@@ -1658,8 +1716,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .discover-preview-card {
-    background-color: #181818;
-    border: 1px solid #282828;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px;
     display: flex;
@@ -1671,8 +1729,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .discover-preview-card:hover {
-    background-color: #222222;
     transform: translateY(-2px);
+    border-color: var(--primary);
 }
 
 .discover-card-thumb {
@@ -1689,17 +1747,18 @@ input:focus, textarea:focus, select:focus {
     flex-direction: column;
     gap: 3px;
     overflow: hidden;
+    flex: 1;
 }
 
 .discover-card-name {
     font-size: 15px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 .discover-card-desc {
     font-size: 12px;
-    color: #aaaaaa;
+    color: var(--text-muted);
     line-height: 1.3;
 }
 
@@ -1719,7 +1778,7 @@ input:focus, textarea:focus, select:focus {
 .right-friends-header h3 {
     font-size: 18px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 .right-friends-stack, .members-stack {
@@ -1735,7 +1794,7 @@ input:focus, textarea:focus, select:focus {
     align-items: center;
     gap: 12px;
     font-size: 13px;
-    color: #ffffff;
+    color: var(--text-main);
     font-weight: 600;
     cursor: pointer;
 }
@@ -1805,8 +1864,9 @@ input:focus, textarea:focus, select:focus {
 }
 
 .modal-box {
-    background-color: #141414;
-    border: 1px solid #333333;
+    background-color: var(--bg-panel);
+    color: var(--text-main);
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 26px;
     width: 90%;
@@ -1814,6 +1874,52 @@ input:focus, textarea:focus, select:focus {
     max-height: 90vh;
     overflow-y: auto;
     animation: modalPopIn 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.preview-body-box {
+    margin-top: 14px;
+    max-height: 420px;
+    overflow: auto;
+    border-radius: 12px;
+    background-color: #111111;
+    padding: 12px;
+}
+
+.preview-media-full {
+    max-width: 100%;
+    max-height: 360px;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.preview-code-block {
+    background-color: #0b0b0b;
+    color: #f3f4f6;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+}
+
+.channel-manage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.channel-manage-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-card);
+    padding: 8px 10px;
+    border-radius: 10px;
 }
 
 .profile-view-banner {
@@ -1836,7 +1942,7 @@ input:focus, textarea:focus, select:focus {
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    border: 3px solid #141414;
+    border: 3px solid var(--bg-panel);
     object-fit: cover;
     background-color: #222222;
 }
@@ -1851,7 +1957,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .pinned-item-card {
-    background-color: #1c1c1c;
+    background-color: var(--bg-card);
     border-left: 3px solid var(--primary);
     border-radius: 10px;
     padding: 10px 12px;
@@ -1870,8 +1976,8 @@ input:focus, textarea:focus, select:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #1c1c1c;
-    border: 1px solid #2e2e2e;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 8px 12px;
     font-size: 13px;
@@ -1885,9 +1991,9 @@ input:focus, textarea:focus, select:focus {
 }
 
 .mode-switch-pill {
-    background-color: #242424;
-    color: #ffffff;
-    border: 1px solid #3a3a3a;
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 6px 14px;
     font-size: 12px;
@@ -1903,8 +2009,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .settings-cat-btn {
-    background-color: #202020;
-    color: #bbbbbb;
+    background-color: var(--bg-card);
+    color: var(--text-muted);
     padding: 7px 12px;
     border-radius: 999px;
     font-size: 12px;
@@ -1932,8 +2038,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .tab-pill {
-    background-color: #222222;
-    color: #aaaaaa;
+    background-color: var(--bg-card);
+    color: var(--text-muted);
     padding: 6px 14px;
     border-radius: 99px;
 }
@@ -1972,10 +2078,6 @@ input:focus, textarea:focus, select:focus {
     gap: 8px;
 }
 
-.theme-settings-section {
-    text-align: left;
-}
-
 .theme-presets-row {
     display: flex;
     gap: 10px;
@@ -2005,15 +2107,15 @@ input:focus, textarea:focus, select:focus {
 }
 
 .color-picker-item {
-    background-color: #1c1c1c;
-    border: 1px solid #333333;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 8px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    color: #dddddd;
+    color: var(--text-main);
 }
 
 .color-picker-item input[type="color"] {
@@ -2027,42 +2129,15 @@ input:focus, textarea:focus, select:focus {
     cursor: pointer;
 }
 
-/* Light Mode Component Overrides */
-:root[data-theme="light"] .sidebar-title-text,
-:root[data-theme="light"] .top-friends-heading,
-:root[data-theme="light"] .top-friend-chip,
-:root[data-theme="light"] .empty-state-center,
-:root[data-theme="light"] .group-card-title,
-:root[data-theme="light"] #footer-username,
-:root[data-theme="light"] .hub-main-heading,
-:root[data-theme="light"] .hub-sub-heading,
-:root[data-theme="light"] .friend-list-row span,
-:root[data-theme="light"] .right-friends-header h3,
-:root[data-theme="light"] .chat-banner-title,
-:root[data-theme="light"] .msg-name,
-:root[data-theme="light"] .member-item-row,
-:root[data-theme="light"] .discover-main-title,
-:root[data-theme="light"] .discover-card-name,
-:root[data-theme="light"] .modal-box h3 {
+/* Light Mode Overrides */
+:root[data-theme="light"] input,
+:root[data-theme="light"] textarea,
+:root[data-theme="light"] select {
+    background-color: #ffffff;
     color: #111827;
 }
 
-:root[data-theme="light"] .group-card-desc,
-:root[data-theme="light"] #footer-tag,
-:root[data-theme="light"] .chat-banner-desc,
-:root[data-theme="light"] .msg-text-body,
-:root[data-theme="light"] .discover-card-desc {
-    color: #4b5563;
-}
-
-:root[data-theme="light"] .left-sidebar {
-    border-right: 1px solid #e5e7eb;
-}
-
-:root[data-theme="light"] .right-sidebar {
-    border-left: 1px solid #e5e7eb;
-}
-
+:root[data-theme="light"] .secondary-btn,
 :root[data-theme="light"] .home-circle-btn,
 :root[data-theme="light"] .green-action-btn,
 :root[data-theme="light"] .user-profile-pill-card,
@@ -2071,52 +2146,31 @@ input:focus, textarea:focus, select:focus {
 :root[data-theme="light"] .hub-search-wrapper input,
 :root[data-theme="light"] .chat-input-area input[type="text"],
 :root[data-theme="light"] .icon-action-btn:not(.send-btn),
-:root[data-theme="light"] .mode-switch-pill,
-:root[data-theme="light"] .settings-cat-btn {
+:root[data-theme="light"] .toolbar-chip-btn,
+:root[data-theme="light"] .channel-pill,
+:root[data-theme="light"] .emoji-cat-btn,
+:root[data-theme="light"] .gif-source-btn,
+:root[data-theme="light"] .gear-icon-btn {
     background-color: #e5e7eb;
     color: #111827;
-}
-
-:root[data-theme="light"] .settings-cat-btn.active {
-    background: var(--primary);
-    color: #ffffff;
 }
 
 :root[data-theme="light"] .green-action-btn,
 :root[data-theme="light"] .add-friend-wide-pill,
 :root[data-theme="light"] .create-group-pill-btn {
-    color: #00994d;
+    color: #008a45;
 }
 
 :root[data-theme="light"] .group-card-row:hover,
 :root[data-theme="light"] .group-card-row.active,
-:root[data-theme="light"] .friend-list-row:hover,
-:root[data-theme="light"] .discover-preview-card:hover {
+:root[data-theme="light"] .friend-list-row:hover {
     background-color: #e5e7eb;
-}
-
-:root[data-theme="light"] .chat-input-area,
-:root[data-theme="light"] .discover-card-container-box,
-:root[data-theme="light"] .modal-box,
-:root[data-theme="light"] .media-picker {
-    background-color: #ffffff;
-    border-color: #d1d5db;
-}
-
-:root[data-theme="light"] .discover-preview-card {
-    background-color: #f9fafb;
-    border-color: #e5e7eb;
 }
 
 :root[data-theme="light"] .sidebar-collapse-tab {
     background-color: #ffffff;
     color: #111827;
     border: 1px solid #d1d5db;
-}
-
-:root[data-theme="light"] .sidebar-divider,
-:root[data-theme="light"] .hub-line {
-    background-color: #d1d5db;
 }
 
 /* ================= MOBILE SUPPORT ================= */
