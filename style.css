@@ -2231,3 +2231,77 @@ input:focus, textarea:focus, select:focus {
         grid-template-columns: 1fr;
     }
 }
+
+/* ================= ADDITIONS FOR REPLY, SPOILER & MODALS ================= */
+.reply-preview-bar,
+.staged-attachment-bar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 18px;
+    background-color: var(--bg-panel);
+    border-top: 1px solid var(--border);
+}
+
+.reply-preview-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.staged-file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.staged-file-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.message-reply-quote {
+    font-size: 12px;
+    color: var(--text-muted);
+    background-color: var(--bg-card);
+    border-left: 3px solid var(--primary);
+    padding: 5px 9px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.spoiler-blur {
+    filter: blur(14px);
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+.spoiler-blur.revealed {
+    filter: none;
+}
+
+.quick-reactions-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+}
+
+:root[data-theme="light"] .message-item-row,
+:root[data-theme="light"] .chat-banner-area {
+    background-color: rgba(255, 255, 255, 0.82);
+}
+
+:root[data-theme="light"] .msg-name,
+:root[data-theme="light"] .chat-banner-title {
+    color: #111827;
+}
+
+:root[data-theme="light"] .msg-text-body,
+:root[data-theme="light"] .chat-banner-desc {
+    color: #374151;
+}

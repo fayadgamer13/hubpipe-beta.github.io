@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HubPipe — Your Message, Your Privacy</title>
+    <title>HubPipe</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
     <link rel="icon" type="image/png" href="Assets/Images/Favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="Assets/Images/Favicon/favicon.svg" />
-<link rel="shortcut icon" href="Assets/Images/Favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/Favicon/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="HubPipe" />
-<link rel="manifest" href="Assets/Images/Favicon/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="Assets/Images/Favicon/favicon.svg" />
+    <link rel="shortcut icon" href="Assets/Images/Favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/Favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="HubPipe" />
+    <link rel="manifest" href="Assets/Images/Favicon/site.webmanifest" />
 </head>
 <body>
 
@@ -71,7 +71,6 @@
                 </div>
             </div>
 
-            <!-- Expanded OS Selector Section -->
             <div id="os-grid-section" style="max-width: 800px; width: 100%; margin: 40px auto; padding: 20px;">
                 <h3 style="color: var(--primary); margin-bottom: 16px; text-align: center;">All Available Operating Systems</h3>
                 <div class="os-grid">
@@ -290,7 +289,7 @@
                         <div id="footer-username">@Username1234</div>
                         <div id="footer-tag">#4321 <span id="footer-status-badge" class="status-pill-tag">• Online</span></div>
                     </div>
-                    <button type="button" class="gear-icon-btn" onclick="event.stopPropagation(); openProfileModal();" title="Settings">
+                    <button type="button" id="profile-settings-btn" class="gear-icon-btn" onclick="event.stopPropagation(); openProfileModal();" title="Settings">
                         <img src="Assets/Images/Icons/settings.png" alt="Settings" class="settings-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                         <span class="gear-icon" style="display:none;">⚙️</span>
                     </button>
@@ -393,6 +392,30 @@
                     </div>
                 </div>
 
+                <!-- Reply Banner Above Input Box -->
+                <div id="replying-to-bar" class="reply-preview-bar" style="display: none;">
+                    <div class="reply-preview-text">
+                        <span>Replying to <strong id="replying-to-author">@User</strong>: </span>
+                        <span id="replying-to-snippet"></span>
+                    </div>
+                    <button type="button" class="secondary-btn" style="padding: 3px 9px; font-size: 11px;" onclick="cancelReply()">✕</button>
+                </div>
+
+                <!-- Staged Attachment Preview (Spoiler Toggle & Delete before sending) -->
+                <div id="staged-attachment-bar" class="staged-attachment-bar" style="display: none;">
+                    <div class="staged-file-info">
+                        <img id="staged-file-thumb" src="" alt="Preview" style="display: none; width: 38px; height: 38px; border-radius: 8px; object-fit: cover;">
+                        <div>
+                            <div id="staged-file-name" style="font-size: 13px; font-weight: 700;">file.png</div>
+                            <div id="staged-file-size" style="font-size: 11px; color: var(--text-muted);">0 KB</div>
+                        </div>
+                    </div>
+                    <div class="staged-file-actions">
+                        <button type="button" id="staged-spoiler-btn" class="secondary-btn" style="padding: 5px 10px; font-size: 12px;" onclick="toggleStagedSpoiler()">👁️ Mark Spoiler</button>
+                        <button type="button" class="danger-btn" style="padding: 5px 10px; font-size: 12px;" onclick="removeStagedAttachment()">🗑️ Delete</button>
+                    </div>
+                </div>
+
                 <!-- Chat Input Bar with Icon Assets -->
                 <form class="chat-input-area" onsubmit="sendMessage(event)">
                     <input type="text" id="message-input" placeholder="Type anything here..." autocomplete="off">
@@ -463,7 +486,40 @@
         </div>
     </div>
 
-    <!-- File / Image / GIF / PDF / Code Preview Modal -->
+    <!-- Reaction Picker Modal (Every Emoji Works) -->
+    <div id="reaction-picker-modal" class="modal-overlay" style="display: none; z-index: 1650;">
+        <div class="modal-box" style="max-width: 360px;">
+            <h3>Add Reaction</h3>
+            <div class="quick-reactions-row" style="display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0;">
+                <button type="button" class="picker-item" onclick="applySelectedReaction('👍')">👍</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('❤️')">❤️</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('😂')">😂</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('😮')">😮</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('😢')">😢</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('🔥')">🔥</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('🎉')">🎉</button>
+                <button type="button" class="picker-item" onclick="applySelectedReaction('💯')">💯</button>
+            </div>
+            <div id="reaction-full-grid" class="picker-grid" style="max-height: 180px; overflow-y: auto;"></div>
+            <div class="modal-actions" style="margin-top: 12px;">
+                <button type="button" class="secondary-btn full-width" onclick="closeReactionPickerModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forward Message Modal -->
+    <div id="forward-message-modal" class="modal-overlay" style="display: none; z-index: 1650;">
+        <div class="modal-box" style="max-width: 400px;">
+            <h3>Forward Message</h3>
+            <p id="forward-preview-snippet" style="font-size: 13px; color: var(--text-muted); margin: 10px 0;"></p>
+            <div id="forward-targets-list" class="accounts-stack-box" style="max-height: 220px;"></div>
+            <div class="modal-actions" style="margin-top: 14px;">
+                <button type="button" class="secondary-btn full-width" onclick="closeForwardModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- File / Image / GIF / PDF / Code Preview Modal (Includes Share Button) -->
     <div id="file-preview-modal" class="modal-overlay" style="display: none; z-index: 1600;">
         <div class="modal-box" style="max-width: 560px;">
             <h3 id="preview-modal-title">Attachment Preview</h3>
@@ -509,7 +565,7 @@
         </div>
     </div>
 
-    <!-- User Profile View Modal (Clicking Another User) -->
+    <!-- User Profile View Modal (Always shows Add Friend & Report buttons) -->
     <div id="user-profile-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box profile-card-modal" style="max-width: 420px; padding: 0; overflow: hidden;">
             <div id="view-user-banner" class="profile-view-banner"></div>
@@ -598,13 +654,16 @@
         <div class="context-item danger" onclick="executeServerContextAction('leave')">Leave Server</div>
     </div>
 
-    <!-- Message / File Attachment Context Menu (Right-Click) -->
+    <!-- Message / File Attachment Context Menu (Right-Click with Reply, Forward, Share & React) -->
     <div id="message-context-menu" class="context-menu-box" style="display: none;">
-        <div class="context-item" onclick="executeMessageContextAction('open')">Preview / Download File</div>
-        <div class="context-item" onclick="executeMessageContextAction('copy')">Copy Message</div>
-        <div class="context-item" onclick="executeMessageContextAction('react')">React with 👍</div>
-        <div class="context-item" onclick="executeMessageContextAction('pin')">Pin Message</div>
-        <div class="context-item danger" id="ctx-delete-message-btn" onclick="executeMessageContextAction('delete')">Delete Message</div>
+        <div class="context-item" onclick="executeMessageContextAction('reply')">↩️ Reply</div>
+        <div class="context-item" onclick="executeMessageContextAction('forward')">➡️ Forward</div>
+        <div class="context-item" onclick="executeMessageContextAction('react')">😊 React</div>
+        <div class="context-item" onclick="executeMessageContextAction('share')">🔗 Share</div>
+        <div class="context-item" onclick="executeMessageContextAction('open')">📄 Preview / Download File</div>
+        <div class="context-item" onclick="executeMessageContextAction('copy')">📋 Copy Message</div>
+        <div class="context-item" onclick="executeMessageContextAction('pin')">📌 Pin Message</div>
+        <div class="context-item danger" id="ctx-delete-message-btn" onclick="executeMessageContextAction('delete')">🗑️ Delete Message</div>
     </div>
 
     <!-- Friend Request Prompt Modal (Accept / Decline) -->
@@ -619,11 +678,12 @@
         </div>
     </div>
 
-    <!-- Create Group / Add Friend Modal -->
+    <!-- Create Group / Join by Invite Link / Add Friend Modal -->
     <div id="create-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-tabs">
                 <button id="modal-tab-group" class="tab-pill active" onclick="switchModalTab('group')">Create Group</button>
+                <button id="modal-tab-invite" class="tab-pill" onclick="switchModalTab('invite')">Join via Invite</button>
                 <button id="modal-tab-dm" class="tab-pill" onclick="switchModalTab('dm')">Add Friend +</button>
             </div>
             <h3 id="modal-heading">Create Group +</h3>
@@ -689,9 +749,9 @@
                 </div>
             </div>
 
-            <!-- Category 2: Custom Theme & Gradients -->
+            <!-- Category 2: Custom Theme & Gradients (Includes Custom Gradient Builder) -->
             <div id="settings-cat-theme" class="settings-cat-panel">
-                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:8px;">Custom Theme & Gradients</label>
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:8px;">Theme Presets & Gradients</label>
                 <div class="theme-presets-row">
                     <button type="button" class="theme-swatch" style="background-color: #ff6600;" onclick="applyThemePreset('#ff6600', '#000000', '#1c1c1c', 'dark')" title="HubPipe Dark"></button>
                     <button type="button" class="theme-swatch" style="background-color: #ffffff; border-color: #888888;" onclick="applyThemePreset('#ff6600', '#ffffff', '#f3f4f6', 'light')" title="HubPipe Light Mode"></button>
@@ -716,6 +776,29 @@
                         <input type="color" id="theme-bg-picker" value="#1c1c1c" oninput="previewCustomTheme()">
                     </div>
                 </div>
+
+                <hr class="modal-divider">
+                <label style="font-size:12px; color:#aaaaaa; display:block; margin-bottom:8px;">Custom Color Gradient Builder</label>
+                <div class="custom-color-grid" style="margin-bottom: 10px;">
+                    <div class="color-picker-item">
+                        <span>Start</span>
+                        <input type="color" id="custom-grad-start" value="#ff6600">
+                    </div>
+                    <div class="color-picker-item">
+                        <span>End</span>
+                        <input type="color" id="custom-grad-end" value="#ec4899">
+                    </div>
+                    <div class="color-picker-item">
+                        <span>Angle</span>
+                        <select id="custom-grad-angle" style="width: 72px; padding: 4px; margin-bottom: 0; font-size: 12px;">
+                            <option value="135deg">135°</option>
+                            <option value="90deg">90°</option>
+                            <option value="180deg">180°</option>
+                            <option value="45deg">45°</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="secondary-btn full-width" onclick="applyCustomGradientBuilder()">Apply Custom Gradient</button>
             </div>
 
             <!-- Category 3: Custom Wallpaper -->
@@ -836,4 +919,4 @@
 
     <script type="module" src="script.js"></script>
 </body>
-</html> 
+</html>

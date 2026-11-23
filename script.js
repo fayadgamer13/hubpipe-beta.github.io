@@ -26,8 +26,8 @@ const firebaseConfig = {
     measurementId: "G-X6CMEXN4H0"
 };
 
-const GIPHY_API_KEY = "";
-const TENOR_API_KEY = "";
+const GIPHY_API_KEY = "R7YEl6RpmQCxoZZvVEaO8pNR6vX4fQvq";
+const TENOR_API_KEY = "R7YEl6RpmQCxoZZvVEaO8pNR6vX4fQvq";
 const REPORT_EMAIL_TARGET = "wadifayad@gmail.com";
 const DISCOVER_SYNC_ROOM = "observable-hubpipe-discover-v1";
 const SOCIAL_SYNC_ROOM = "observable-hubpipe-social-v1";
@@ -59,6 +59,12 @@ let activeEmojiCategory = "Smileys";
 let activeGifSource = "all";
 let deferredPwaPrompt = null;
 let customNotifAudioUrl = localStorage.getItem("hubpipe_custom_notif_audio") || null;
+
+let replyTargetMessage = null;
+let stagedAttachment = null;
+let markNextAsSpoiler = false;
+let reactionTargetMsgId = null;
+let forwardTargetMsgId = null;
 
 window.isSignUpMode = false;
 window.currentModalTab = "group";
@@ -150,6 +156,8 @@ const EMOJI_CATEGORIES = {
     Objects: ["💬", "💭", "🗨️", "🗯️", "📱", "📲", "💻", "🖥️", "🖨️", "⌨️", "🖱️", "🎮", "🕹️", "🎧", "🎤", "📷", "📸", "🎥", "📺", "📻", "🔔", "🔕", "📢", "📣", "📁", "📂", "📄", "📃", "📑", "📌", "📍", "🔑", "🔒", "🔓", "🛠️", "⚙️", "🧲", "💡", "🔦", "🔋", "🔌", "🎁", "🎀", "📦"],
     Nature: ["🌞", "🌝", "🌛", "🌜", "🌚", "🌕", "🌖", "🌗", "🌘", "🌑", "🌒", "🌓", "🌔", "☀️", "⭐", "🌟", "🌠", "☁️", "⛅", "⛈️", "🌤️", "🌦️", "🌧️", "🌨️", "🌩️", "🌪️", "🌈", "☔", "⚡", "❄️", "☃️", "🔥", "💧", "🌊", "🌸", "🌺", "🌻", "🌼", "🌷", "🌱", "🌲", "🌳", "🌴", "🌵", "🍀", "🍁", "🍂", "🍃", "🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵", "🐔", "🐧", "🐦", "🐤", "🦆", "🦅", "🦉", "🦇", "🐺", "🐗", "🐴", "🦄", "🐝", "🐛", "🦋", "🐌", "🐞", "🐢", "🐍", "🐙", "🐠", "🐬", "🐳", "🦈", "🦖"]
 };
+
+const QUICK_REACTIONS = ["👍", "❤️", "😂", "🔥", "😮", "😢", "👏", "🎉", "💯", "👀"];
 
 const GIF_SUGGESTIONS = [
     { title: "Hello Wave", query: "hello wave", source: "giphy", url: "https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" },
@@ -897,6 +905,8 @@ function recordAndRenderMessage(targetRoomId, msgData, isOwnMessage = false) {
         authorName: msgData.authorName,
         authorPfp: msgData.authorPfp,
         text: msgData.text || "",
+        replyTo: msgData.replyTo || null,
+        spoiler: Boolean(msgData.spoiler),
         gif: msgData.gif || null,
         imageData: msgData.imageData || null,
         fileName: msgData.fileName || null,
@@ -914,10 +924,12 @@ function recordAndRenderMessage(targetRoomId, msgData, isOwnMessage = false) {
     }
     window.roomMessages[targetRoomId].push(msgObj);
 
-    const previewText = msgObj.text
-        || (msgObj.gif ? "[GIF]" : null)
-        || (msgObj.imageData ? `[Image: ${msgObj.fileName || "image"}]` : null)
-        || (msgObj.fileName ? `[File: ${msgObj.fileName}]` : "[Media]");
+    const previewText = msgObj.spoiler
+        ? "[Spoiler]"
+        : (msgObj.text
+            || (msgObj.gif ? "[GIF]" : null)
+            || (msgObj.imageData ? `[Image: ${msgObj.fileName || "image"}]` : null)
+            || (msgObj.fileName ? `[File: ${msgObj.fileName}]` : "[Media]"));
 
     const roomIndex = window.activeRooms.findIndex(r => r.id === targetRoomId);
     if (roomIndex !== -1) {
@@ -953,14 +965,21 @@ function appendMessageToLog(msgData) {
     msgRow.className = "message-item-row" + (msgData.pinned ? " pinned-message" : "");
     msgRow.dataset.msgId = msgData.id;
 
+    const spoilerClass = msgData.spoiler ? "spoiler-blur" : "";
+    const spoilerClickAttr = msgData.spoiler ? ` onclick="this.classList.toggle('revealed')"` : "";
+
+    const replyHTML = msgData.replyTo
+        ? `<div class="message-reply-quote">↩ Replying to @${escapeHTML(msgData.replyTo.authorName)}: ${escapeHTML(msgData.replyTo.text)}</div>`
+        : "";
+
     let attachmentHTML = "";
     if (msgData.gif) {
-        attachmentHTML = `<img class="msg-gif" src="${escapeHTML(msgData.gif)}" alt="GIF" onclick="openFilePreviewById('${escapeHTML(msgData.id)}')">`;
+        attachmentHTML = `<img class="msg-gif ${spoilerClass}" src="${escapeHTML(msgData.gif)}" alt="GIF" onclick="if(!this.classList.contains('spoiler-blur')||this.classList.contains('revealed'))openFilePreviewById('${escapeHTML(msgData.id)}');else this.classList.add('revealed');">`;
     } else if (msgData.imageData) {
-        attachmentHTML = `<img class="msg-image-attachment" src="${escapeHTML(msgData.imageData)}" alt="${escapeHTML(msgData.fileName || "Uploaded image")}" onclick="openFilePreviewById('${escapeHTML(msgData.id)}')">`;
+        attachmentHTML = `<img class="msg-image-attachment ${spoilerClass}" src="${escapeHTML(msgData.imageData)}" alt="${escapeHTML(msgData.fileName || "Uploaded image")}" onclick="if(!this.classList.contains('spoiler-blur')||this.classList.contains('revealed'))openFilePreviewById('${escapeHTML(msgData.id)}');else this.classList.add('revealed');">`;
     } else if (msgData.fileName) {
         attachmentHTML = `
-            <div class="msg-file-card" onclick="openFilePreviewById('${escapeHTML(msgData.id)}')">
+            <div class="msg-file-card ${spoilerClass}" onclick="if(!this.classList.contains('spoiler-blur')||this.classList.contains('revealed'))openFilePreviewById('${escapeHTML(msgData.id)}');else this.classList.add('revealed');">
                 <span>📄</span>
                 <span>${escapeHTML(msgData.fileName)}${msgData.fileSizeLabel ? ` (${escapeHTML(msgData.fileSizeLabel)})` : ""}</span>
             </div>
@@ -978,8 +997,10 @@ function appendMessageToLog(msgData) {
                 <span class="msg-name" onclick="openUserProfileModal('${escapeHTML(msgData.authorName)}')">@${escapeHTML(msgData.authorName)}</span>
                 <span class="msg-timestamp">${escapeHTML(msgData.time)}</span>
                 ${msgData.pinned ? '<span style="font-size:11px; color:var(--primary);">📌 Pinned</span>' : ""}
+                ${msgData.spoiler ? '<span style="font-size:11px; color:var(--text-muted);">🙈 Spoiler</span>' : ""}
             </div>
-            ${msgData.text ? `<div class="msg-text-body">${escapeHTML(msgData.text)}</div>` : ""}
+            ${replyHTML}
+            ${msgData.text ? `<div class="msg-text-body ${spoilerClass}"${spoilerClickAttr}>${escapeHTML(msgData.text)}</div>` : ""}
             ${attachmentHTML}
             ${reactionsHTML}
         </div>
@@ -1024,6 +1045,8 @@ function subscribeToRoom(roomId) {
         const fileName = typeof payload === "object" ? (payload.fileName || null) : null;
         const fileUrl = typeof payload === "object" ? (payload.fileUrl || imageData || gifUrl || null) : null;
         const fileSizeLabel = typeof payload === "object" ? (payload.fileSizeLabel || null) : null;
+        const replyTo = typeof payload === "object" ? (payload.replyTo || null) : null;
+        const spoiler = typeof payload === "object" ? Boolean(payload.spoiler) : false;
         const msgId = typeof payload === "object" && payload.id ? payload.id : null;
         const timeStr = (typeof payload === "object" && payload.time)
             ? payload.time
@@ -1041,6 +1064,8 @@ function subscribeToRoom(roomId) {
             authorName,
             authorPfp,
             text: textContent,
+            replyTo,
+            spoiler,
             gif: gifUrl,
             imageData,
             fileName,
@@ -1297,6 +1322,8 @@ window.switchRoom = function(roomId) {
     document.getElementById("edit-server-btn").style.display = isGroup ? "inline-flex" : "none";
     renderGroupChannelsStrip(roomId, isGroup);
 
+    window.cancelReply();
+    window.clearStagedAttachment();
     renderSavedRoomHistory(roomId);
 
     document.getElementById("right-sidebar-title").innerText = isGroup ? "List of Chat Members" : "Direct Message";
@@ -1670,25 +1697,68 @@ window.renderDiscoverCards = function() {
     });
 };
 
-// ================= MESSAGING, EMOJIS, GIFS & FILE PREVIEWS =================
-window.sendMessage = function(event) {
-    event.preventDefault();
-    const input = document.getElementById("message-input");
-    const text = input.value.trim();
-    if (!text || !window.currentRoomId) return;
+// ================= REPLY, SPOILER, STAGED ATTACHMENTS & MESSAGING =================
+window.setReplyTarget = function(msgObj) {
+    if (!msgObj) return;
+    replyTargetMessage = {
+        id: msgObj.id,
+        authorName: msgObj.authorName,
+        text: msgObj.text || msgObj.fileName || (msgObj.gif ? "[GIF]" : "[Attachment]")
+    };
+    const bar = document.getElementById("reply-preview-bar");
+    const label = document.getElementById("reply-preview-label");
+    if (bar && label) {
+        label.innerText = `Replying to @${replyTargetMessage.authorName}: ${replyTargetMessage.text}`;
+        bar.style.display = "flex";
+    }
+    document.getElementById("message-input")?.focus();
+};
 
+window.cancelReply = function() {
+    replyTargetMessage = null;
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "none";
+};
+
+window.clearStagedAttachment = function() {
+    stagedAttachment = null;
+    const bar = document.getElementById("staged-attachment-bar");
+    if (bar) bar.style.display = "none";
+};
+
+window.toggleSpoilerOnComposer = function() {
+    markNextAsSpoiler = !markNextAsSpoiler;
+    const btn = document.getElementById("spoiler-toggle-btn");
+    if (btn) {
+        btn.style.borderColor = markNextAsSpoiler ? "var(--primary)" : "";
+        btn.style.color = markNextAsSpoiler ? "var(--primary)" : "";
+    }
+};
+
+function dispatchComposedPayload(targetRoom, extraFields = {}) {
+    if (!targetRoom) return;
     const now = new Date();
     const timeStr = `${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} ${now.toLocaleDateString()}`;
-    const targetRoom = window.currentRoomId;
     const msgId = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
-    recordAndRenderMessage(targetRoom, {
+    const msgData = {
         id: msgId,
         authorName: window.currentUser?.name || "You",
         authorPfp: window.currentUser?.pfp || "https://api.dicebear.com/7.x/bottts/svg?seed=default",
-        text,
+        text: extraFields.text || "",
+        replyTo: replyTargetMessage,
+        spoiler: markNextAsSpoiler,
+        gif: extraFields.gif || null,
+        imageData: extraFields.imageData || null,
+        fileName: extraFields.fileName || null,
+        fileMime: extraFields.fileMime || "",
+        fileUrl: extraFields.fileUrl || null,
+        codeText: extraFields.codeText ?? null,
+        fileSizeLabel: extraFields.fileSizeLabel || null,
         time: timeStr
-    }, true);
+    };
+
+    recordAndRenderMessage(targetRoom, msgData, true);
 
     if (drone) {
         drone.publish({
@@ -1696,11 +1766,51 @@ window.sendMessage = function(event) {
             message: {
                 id: msgId,
                 senderName: window.currentUser?.name || "You",
-                text,
+                text: msgData.text || (msgData.fileName && !msgData.imageData ? `📎 ${msgData.fileName}${msgData.fileSizeLabel ? ` (${msgData.fileSizeLabel})` : ""}` : ""),
+                replyTo: msgData.replyTo,
+                spoiler: msgData.spoiler,
+                gif: msgData.gif,
+                imageData: msgData.imageData && msgData.imageData.length < 180000 ? msgData.imageData : null,
+                fileName: msgData.fileName,
+                fileSizeLabel: msgData.fileSizeLabel,
                 time: timeStr
             }
         });
     }
+
+    window.cancelReply();
+    if (markNextAsSpoiler) {
+        window.toggleSpoilerOnComposer();
+    }
+}
+
+window.sendStagedAttachment = function() {
+    if (!stagedAttachment || !window.currentRoomId) return;
+    const caption = document.getElementById("message-input")?.value.trim() || "";
+    dispatchComposedPayload(window.currentRoomId, {
+        ...stagedAttachment,
+        text: caption
+    });
+    if (document.getElementById("message-input")) {
+        document.getElementById("message-input").value = "";
+    }
+    window.clearStagedAttachment();
+};
+
+window.sendMessage = function(event) {
+    event.preventDefault();
+    if (!window.currentRoomId) return;
+
+    if (stagedAttachment) {
+        window.sendStagedAttachment();
+        return;
+    }
+
+    const input = document.getElementById("message-input");
+    const text = input.value.trim();
+    if (!text) return;
+
+    dispatchComposedPayload(window.currentRoomId, { text });
     input.value = "";
 };
 
@@ -1826,35 +1936,14 @@ function renderGifResults(items) {
             <span class="gif-source-badge">${escapeHTML(gifItem.source)}</span>
         `;
         card.onclick = () => {
-            const now = new Date();
-            const timeStr = `${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} ${now.toLocaleDateString()}`;
             const targetRoom = window.currentRoomId;
             if (!targetRoom) return;
-            const msgId = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-
-            recordAndRenderMessage(targetRoom, {
-                id: msgId,
-                authorName: window.currentUser?.name || "You",
-                authorPfp: window.currentUser?.pfp || "https://api.dicebear.com/7.x/bottts/svg?seed=default",
+            dispatchComposedPayload(targetRoom, {
                 text: "",
                 gif: gifItem.url,
                 fileName: `${gifItem.title}.gif`,
-                fileUrl: gifItem.url,
-                time: timeStr
-            }, true);
-
-            if (drone) {
-                drone.publish({
-                    room: targetRoom,
-                    message: {
-                        id: msgId,
-                        senderName: window.currentUser?.name || "You",
-                        text: "",
-                        gif: gifItem.url,
-                        time: timeStr
-                    }
-                });
-            }
+                fileUrl: gifItem.url
+            });
             document.getElementById("media-picker").style.display = "none";
         };
         grid.appendChild(card);
@@ -1873,9 +1962,6 @@ window.handleFileAttachment = function(event) {
     const file = event.target.files[0];
     if (!file || !window.currentRoomId) return;
 
-    const now = new Date();
-    const timeStr = `${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} ${now.toLocaleDateString()}`;
-    const targetRoom = window.currentRoomId;
     const sizeLabel = file.size >= 1048576
         ? `${(file.size / 1048576).toFixed(2)} MB`
         : `${(file.size / 1024).toFixed(1)} KB`;
@@ -1885,47 +1971,38 @@ window.handleFileAttachment = function(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const dataUrl = e.target.result;
-        const msgId = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-
-        const finalizeMessage = (codeText = null) => {
-            const msgPayload = {
-                id: msgId,
-                authorName: window.currentUser?.name || "You",
-                authorPfp: window.currentUser?.pfp || "https://api.dicebear.com/7.x/bottts/svg?seed=default",
-                text: "",
+        const finalizeStage = (codeText = null) => {
+            stagedAttachment = {
                 imageData: isImage ? dataUrl : null,
                 fileName: file.name,
                 fileMime: file.type || "",
                 fileUrl: dataUrl,
                 codeText,
-                fileSizeLabel: sizeLabel,
-                time: timeStr
+                fileSizeLabel: sizeLabel
             };
-
-            recordAndRenderMessage(targetRoom, msgPayload, true);
-
-            if (drone) {
-                drone.publish({
-                    room: targetRoom,
-                    message: {
-                        id: msgId,
-                        senderName: window.currentUser?.name || "You",
-                        text: isImage ? "" : `📎 ${file.name} (${sizeLabel})`,
-                        imageData: isImage && dataUrl.length < 180000 ? dataUrl : null,
-                        fileName: file.name,
-                        fileSizeLabel: sizeLabel,
-                        time: timeStr
+            const bar = document.getElementById("staged-attachment-bar");
+            const nameEl = document.getElementById("staged-file-name");
+            const thumbEl = document.getElementById("staged-file-thumb");
+            if (bar && nameEl) {
+                nameEl.innerText = `${file.name} (${sizeLabel})`;
+                if (thumbEl) {
+                    if (isImage) {
+                        thumbEl.src = dataUrl;
+                        thumbEl.style.display = "block";
+                    } else {
+                        thumbEl.style.display = "none";
                     }
-                });
+                }
+                bar.style.display = "flex";
             }
         };
 
         if (codeFile) {
             const textReader = new FileReader();
-            textReader.onload = (ev) => finalizeMessage(ev.target.result || "");
+            textReader.onload = (ev) => finalizeStage(ev.target.result || "");
             textReader.readAsText(file);
         } else {
-            finalizeMessage(null);
+            finalizeStage(null);
         }
     };
     reader.readAsDataURL(file);
@@ -2045,6 +2122,116 @@ window.toggleMessageReaction = function(msgId, reactionSymbol) {
     }
     saveAccountState();
     renderSavedRoomHistory(window.currentRoomId);
+};
+
+window.openReactionModal = function(msgId) {
+    reactionTargetMsgId = msgId;
+    const modal = document.getElementById("reaction-modal");
+    const row = document.getElementById("quick-reactions-row");
+    const customInput = document.getElementById("custom-reaction-input");
+    if (!modal || !row) return;
+
+    if (customInput) customInput.value = "";
+    row.innerHTML = "";
+    QUICK_REACTIONS.forEach(em => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "picker-item";
+        btn.innerText = em;
+        btn.onclick = () => {
+            if (reactionTargetMsgId) {
+                window.toggleMessageReaction(reactionTargetMsgId, em);
+            }
+            window.closeReactionModal();
+        };
+        row.appendChild(btn);
+    });
+
+    modal.style.display = "flex";
+};
+
+window.closeReactionModal = function() {
+    document.getElementById("reaction-modal").style.display = "none";
+    reactionTargetMsgId = null;
+};
+
+window.applyCustomReaction = function() {
+    const val = (document.getElementById("custom-reaction-input")?.value || "").trim();
+    if (!val || !reactionTargetMsgId) return;
+    window.toggleMessageReaction(reactionTargetMsgId, val);
+    window.closeReactionModal();
+};
+
+window.openForwardModal = function(msgId) {
+    forwardTargetMsgId = msgId;
+    const modal = document.getElementById("forward-modal");
+    const select = document.getElementById("forward-room-select");
+    if (!modal || !select) return;
+
+    select.innerHTML = "";
+    window.activeRooms.forEach(r => {
+        if (r.id === window.currentRoomId) return;
+        const opt = document.createElement("option");
+        opt.value = r.id;
+        opt.innerText = r.name;
+        select.appendChild(opt);
+    });
+
+    if (select.options.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.innerText = "No other chats available";
+        select.appendChild(opt);
+    }
+
+    modal.style.display = "flex";
+};
+
+window.closeForwardModal = function() {
+    document.getElementById("forward-modal").style.display = "none";
+    forwardTargetMsgId = null;
+};
+
+window.confirmForwardMessage = function() {
+    const destRoomId = document.getElementById("forward-room-select")?.value;
+    if (!destRoomId || !forwardTargetMsgId) return;
+
+    const msgs = window.roomMessages[window.currentRoomId] || [];
+    const original = msgs.find(m => m.id === forwardTargetMsgId);
+    if (!original) return;
+
+    const now = new Date();
+    const timeStr = `${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} ${now.toLocaleDateString()}`;
+    const fwdText = original.text ? `[Forwarded] ${original.text}` : "[Forwarded Attachment]";
+
+    recordAndRenderMessage(destRoomId, {
+        authorName: window.currentUser?.name || "You",
+        authorPfp: window.currentUser?.pfp || "https://api.dicebear.com/7.x/bottts/svg?seed=default",
+        text: fwdText,
+        gif: original.gif,
+        imageData: original.imageData,
+        fileName: original.fileName,
+        fileMime: original.fileMime,
+        fileUrl: original.fileUrl,
+        codeText: original.codeText,
+        fileSizeLabel: original.fileSizeLabel,
+        time: timeStr
+    }, true);
+
+    if (drone) {
+        drone.publish({
+            room: destRoomId,
+            message: {
+                senderName: window.currentUser?.name || "You",
+                text: fwdText,
+                gif: original.gif,
+                time: timeStr
+            }
+        });
+    }
+
+    window.closeForwardModal();
+    window.showCustomDialog("Forwarded", "Message forwarded to selected chat.");
 };
 
 // ================= PINNED MESSAGES MODAL =================
@@ -2768,6 +2955,14 @@ window.executeMessageContextAction = function(action) {
             window.openFilePreviewById(activeContextMessage.id);
             break;
         }
+        case "reply": {
+            window.setReplyTarget(activeContextMessage);
+            break;
+        }
+        case "forward": {
+            window.openForwardModal(activeContextMessage.id);
+            break;
+        }
         case "copy": {
             const copyVal = activeContextMessage.text || activeContextMessage.codeText || activeContextMessage.fileName || activeContextMessage.gif || "";
             if (copyVal && navigator.clipboard && navigator.clipboard.writeText) {
@@ -2776,7 +2971,7 @@ window.executeMessageContextAction = function(action) {
             break;
         }
         case "react": {
-            window.toggleMessageReaction(activeContextMessage.id, "👍");
+            window.openReactionModal(activeContextMessage.id);
             break;
         }
         case "pin": {
